@@ -19,3 +19,20 @@ Central Europe 2026 travel journal and social card assets.
 3. Push to `main`.
 4. GitHub Actions deploys `outputs/central-europe-2026/html-guide/` to GitHub Pages.
 
+## Custom Domain DNS
+
+Set these records at the domain provider for `travel-tefuda.com`:
+
+```text
+A     @    185.199.108.153
+A     @    185.199.109.153
+A     @    185.199.110.153
+A     @    185.199.111.153
+AAAA  @    2606:50c0:8000::153
+AAAA  @    2606:50c0:8001::153
+AAAA  @    2606:50c0:8002::153
+AAAA  @    2606:50c0:8003::153
+CNAME www  longlongnero.github.io
+```
+
+After DNS propagates, enable **Enforce HTTPS** in GitHub Pages if it is not enabled automatically.
