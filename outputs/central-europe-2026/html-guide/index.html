@@ -1,0 +1,2548 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>中欧八日旅行手札 | Budapest Vienna Prague</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root {
+      --paper: #f5efe3;
+      --paper-deep: #eadfca;
+      --ink: #2e2a24;
+      --muted: #776d5f;
+      --line: #c9b996;
+      --line-soft: rgba(88, 79, 61, 0.18);
+      --accent: #536244;
+      --accent-ink: #26301f;
+      --cream: #fffaf0;
+      --shadow: 0 24px 70px rgba(48, 40, 29, 0.14);
+      --serif: "Cormorant Garamond", "Songti SC", "STSong", "Times New Roman", serif;
+      --sans: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --mono: "Menlo", "SFMono-Regular", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(83, 98, 68, 0.08), transparent 28%),
+        linear-gradient(90deg, rgba(46, 42, 36, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(46, 42, 36, 0.025) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 38px 38px, 38px 38px, auto;
+      font-family: var(--sans);
+      line-height: 1.7;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.18), rgba(255,255,255,0)),
+        repeating-linear-gradient(0deg, rgba(46,42,36,0.018), rgba(46,42,36,0.018) 1px, transparent 1px, transparent 5px);
+      mix-blend-mode: multiply;
+      opacity: 0.68;
+      z-index: 5;
+    }
+
+    a {
+      color: var(--accent-ink);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .shell {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background: rgba(245, 239, 227, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .topbar-inner {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.4vw, 32px);
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav a {
+      flex: 0 0 auto;
+      border: 1px solid var(--line-soft);
+      padding: 7px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255, 250, 240, 0.56);
+      text-transform: uppercase;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+    }
+
+    .hero {
+      min-height: min(860px, calc(100vh - 66px));
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.86fr);
+      gap: clamp(28px, 5vw, 72px);
+      align-items: center;
+      padding: clamp(44px, 7vw, 88px) 0 34px;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero h1,
+    .section-title h2,
+    .city-copy h2,
+    .route-card h3,
+    .appendix h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 0.98;
+      margin: 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(54px, 8vw, 112px);
+      max-width: 9.8em;
+    }
+
+    .hero p {
+      max-width: 610px;
+      font-size: clamp(16px, 1.5vw, 20px);
+      color: #51483c;
+      margin: 26px 0 0;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+      max-width: 820px;
+    }
+
+    .meta-tile {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.64);
+      padding: 14px 14px 12px;
+      min-height: 104px;
+    }
+
+    .meta-tile strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 27px;
+      line-height: 1.1;
+      font-weight: 500;
+    }
+
+    .meta-tile span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .map-stack {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .map-frame {
+      border: 1px solid var(--line);
+      background: var(--cream);
+      padding: 13px;
+      box-shadow: var(--shadow);
+      transform: rotate(1.2deg);
+    }
+
+    .map-frame img {
+      aspect-ratio: 4 / 5;
+      width: 100%;
+      object-fit: cover;
+      filter: saturate(0.86) contrast(0.98);
+    }
+
+    .stamp {
+      position: absolute;
+      right: -18px;
+      bottom: 34px;
+      width: 138px;
+      height: 138px;
+      border: 1px solid var(--accent);
+      display: grid;
+      place-items: center;
+      background: rgba(245, 239, 227, 0.94);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-align: center;
+      text-transform: uppercase;
+      transform: rotate(-7deg);
+    }
+
+    .band {
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 34px 0;
+      background: rgba(234, 223, 202, 0.35);
+    }
+
+    .spine {
+      display: grid;
+      grid-template-columns: 1.1fr 0.7fr 0.7fr 0.7fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .spine .lead {
+      border-left: 4px solid var(--accent);
+      padding-left: 18px;
+    }
+
+    .spine h2 {
+      font-family: var(--serif);
+      font-size: clamp(30px, 4.5vw, 56px);
+      line-height: 1;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .spine p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .spine-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.62);
+      padding: 18px;
+      min-height: 168px;
+    }
+
+    .spine-card b {
+      display: block;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .spine-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    section {
+      padding: clamp(54px, 8vw, 108px) 0;
+      scroll-margin-top: 92px;
+    }
+
+    .section-title {
+      display: grid;
+      grid-template-columns: 0.84fr 1fr;
+      gap: clamp(24px, 4vw, 60px);
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(42px, 6vw, 78px);
+    }
+
+    .section-title p {
+      margin: 0;
+      color: #51483c;
+    }
+
+    .transport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .ticket-card,
+    .route-card,
+    .fact-card,
+    .hotel-card,
+    .source-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.68);
+      box-shadow: 0 12px 32px rgba(48, 40, 29, 0.07);
+    }
+
+    .ticket-card {
+      min-height: 250px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .ticket-card .code {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .ticket-card h3 {
+      font-family: var(--serif);
+      font-size: clamp(23px, 2.2vw, 31px);
+      line-height: 1;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .ticket-card p,
+    .ticket-card li {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .ticket-card ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .route-atlas {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.72fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .map-panel,
+    .map-side,
+    .food-table-wrap {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.72);
+      box-shadow: 0 12px 32px rgba(48, 40, 29, 0.07);
+    }
+
+    #live-map {
+      width: 100%;
+      min-height: 620px;
+      background: #e7dfcd;
+      filter: saturate(0.84) contrast(0.98);
+    }
+
+    .leaflet-container {
+      font-family: var(--sans);
+      color: var(--ink);
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      border-radius: 0;
+      background: var(--cream);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(48, 40, 29, 0.18);
+    }
+
+    .leaflet-popup-content {
+      margin: 12px 14px;
+      min-width: 190px;
+    }
+
+    .map-popup-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .map-side {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .map-tabs,
+    .day-tabs {
+      display: grid;
+      gap: 8px;
+    }
+
+    .map-tabs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .day-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .map-tab,
+    .day-tab {
+      min-height: 42px;
+      border: 1px solid var(--line-soft);
+      background: rgba(245, 239, 227, 0.72);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .map-tab.is-active,
+    .day-tab.is-active {
+      border-color: var(--accent);
+      background: rgba(83, 98, 68, 0.12);
+      color: var(--accent-ink);
+    }
+
+    .route-summary {
+      border-top: 1px solid var(--line-soft);
+      padding-top: 16px;
+    }
+
+    .route-summary h3 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .route-summary p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .map-stop-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .map-stop-list li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #51483c;
+      font-size: 14px;
+    }
+
+    .map-stop-list b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--accent);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .map-note {
+      border: 1px solid var(--line-soft);
+      padding: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(234, 223, 202, 0.28);
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      border: 1px solid var(--accent);
+      padding: 6px 12px;
+      color: var(--accent-ink);
+      background: rgba(83, 98, 68, 0.08);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .city {
+      position: relative;
+      display: block;
+      isolation: isolate;
+      overflow: hidden;
+      padding-top: clamp(64px, 7vw, 92px);
+      padding-bottom: clamp(64px, 7vw, 92px);
+      border-top: 1px solid var(--line-soft);
+      scroll-margin-top: 92px;
+    }
+
+    .city::before {
+      content: "";
+      position: absolute;
+      inset: clamp(34px, 5vw, 72px) 0 clamp(28px, 5vw, 68px);
+      z-index: -2;
+      border: 1px solid var(--line-soft);
+      background:
+        linear-gradient(90deg, rgba(255,250,240,0.92), rgba(255,250,240,0.72) 42%, rgba(255,250,240,0.48)),
+        rgba(234, 223, 202, 0.18);
+    }
+
+    .city-media {
+      position: absolute;
+      inset: clamp(34px, 5vw, 72px) 0 clamp(28px, 5vw, 68px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .city-media figure {
+      margin: 0;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .city-media img {
+      position: absolute;
+      top: 4%;
+      right: -4%;
+      width: min(720px, 58vw);
+      height: 92%;
+      object-fit: cover;
+      opacity: 0.18;
+      filter: sepia(0.16) saturate(0.86) contrast(0.92);
+      transform: rotate(1.5deg);
+      border: 1px solid rgba(88, 79, 61, 0.25);
+      box-shadow: 0 24px 70px rgba(48, 40, 29, 0.12);
+    }
+
+    .caption {
+      position: absolute;
+      right: clamp(16px, 4vw, 54px);
+      bottom: clamp(16px, 4vw, 54px);
+      z-index: 1;
+      display: flex;
+      gap: 16px;
+      padding: 8px 10px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 250, 240, 0.68);
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .city-copy h2 {
+      font-size: clamp(40px, 4.2vw, 62px);
+      white-space: nowrap;
+    }
+
+    .city-copy {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 56px));
+      margin: 0 auto;
+    }
+
+    #budapest .city-copy {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #vienna .city-copy {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #vienna .city-media img {
+      right: auto;
+      left: -5%;
+      transform: rotate(-1.4deg);
+    }
+
+    #vienna::before {
+      background:
+        linear-gradient(90deg, rgba(255,250,240,0.54), rgba(255,250,240,0.78) 42%, rgba(255,250,240,0.94)),
+        rgba(234, 223, 202, 0.18);
+    }
+
+    #lake .city-copy {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #lake .city-media img {
+      right: -2%;
+      width: min(760px, 62vw);
+      height: 88%;
+      top: 7%;
+      transform: rotate(1deg);
+      opacity: 0.2;
+    }
+
+    #lake::before {
+      background:
+        linear-gradient(90deg, rgba(255,250,240,0.9), rgba(255,250,240,0.7) 48%, rgba(255,250,240,0.5)),
+        rgba(190, 210, 198, 0.18);
+    }
+
+    #prague .city-copy {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #prague .city-media img {
+      right: 50%;
+      width: min(860px, 74vw);
+      height: 76%;
+      top: 12%;
+      transform: translateX(50%) rotate(0.6deg);
+      opacity: 0.14;
+    }
+
+    .city-kicker {
+      font-family: var(--mono);
+      color: var(--accent-ink);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .city-intro {
+      max-width: 920px;
+      color: #51483c;
+      margin: 18px 0 24px;
+      font-size: 17px;
+    }
+
+    .day-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .route-card {
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+      width: 100%;
+      background: rgba(255, 250, 240, 0.86);
+      backdrop-filter: blur(5px);
+    }
+
+    .route-card header {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) 118px;
+      gap: 16px;
+      align-items: start;
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .route-card::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid var(--line-soft);
+      opacity: 0.25;
+      pointer-events: none;
+      transform: rotate(5deg);
+    }
+
+    .day-no {
+      width: 54px;
+      height: 54px;
+      border: 1px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--accent-ink);
+      background: rgba(83, 98, 68, 0.06);
+    }
+
+    .route-card h3 {
+      font-size: clamp(28px, 3vw, 40px);
+      max-width: 100%;
+    }
+
+    .date {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+      white-space: nowrap;
+      line-height: 1.35;
+    }
+
+    .date b {
+      display: block;
+      color: var(--accent-ink);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+    }
+
+    .date span {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .route-line {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      counter-reset: stop;
+    }
+
+    .route-line li {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      color: #51483c;
+    }
+
+    .route-line li::before {
+      counter-increment: stop;
+      content: counter(stop, decimal-leading-zero);
+      font-family: var(--mono);
+      color: var(--accent-ink);
+      font-size: 11px;
+      border-bottom: 1px solid var(--line);
+      padding-top: 2px;
+    }
+
+    .route-notes {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .note {
+      min-height: 78px;
+      border: 1px solid var(--line-soft);
+      background: rgba(234, 223, 202, 0.32);
+      padding: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .note b {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .route-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .fact-card {
+      padding: 18px;
+      min-height: 190px;
+    }
+
+    .fact-card h3 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .fact-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .food-table-wrap {
+      overflow-x: auto;
+    }
+
+    .food-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 960px;
+      font-size: 14px;
+    }
+
+    .food-table th,
+    .food-table td {
+      border-bottom: 1px solid var(--line-soft);
+      padding: 14px 16px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .food-table th {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(234, 223, 202, 0.42);
+    }
+
+    .food-table td:first-child {
+      font-family: var(--serif);
+      font-size: 23px;
+      line-height: 1.05;
+      color: var(--ink);
+      min-width: 190px;
+    }
+
+    .food-table th:nth-child(2),
+    .food-table td:nth-child(2),
+    .food-table th:nth-child(5),
+    .food-table td:nth-child(5),
+    .food-table th:nth-child(7),
+    .food-table td:nth-child(7) {
+      white-space: nowrap;
+    }
+
+    .food-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .media-section {
+      margin-top: 34px;
+      scroll-margin-top: 92px;
+    }
+
+    .media-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 28px;
+    }
+
+    .media-heading h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .media-heading p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .media-grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .media-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.72);
+      box-shadow: 0 12px 32px rgba(48, 40, 29, 0.07);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .media-card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--paper-deep);
+    }
+
+    .media-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .media-body h4 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1.02;
+    }
+
+    .media-body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .media-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .film-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.76);
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 18px;
+      padding: 16px;
+      box-shadow: 0 12px 32px rgba(48, 40, 29, 0.07);
+    }
+
+    .film-card img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      border: 1px solid var(--line-soft);
+      background: var(--paper-deep);
+    }
+
+    .film-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .film-body h4 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 31px;
+      font-weight: 500;
+      line-height: 1.02;
+    }
+
+    .quote {
+      margin: 0;
+      color: var(--accent-ink);
+      font-family: var(--serif);
+      font-size: 22px;
+      line-height: 1.18;
+    }
+
+    .film-meta {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .appendix {
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .appendix h2 {
+      font-size: clamp(40px, 5.4vw, 72px);
+      margin-bottom: 20px;
+    }
+
+    .appendix-copy {
+      max-width: 780px;
+      color: #51483c;
+      margin-bottom: 26px;
+    }
+
+    .hotel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .hotel-card {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      min-height: 245px;
+    }
+
+    .rank {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hotel-card h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.05;
+      font-size: 30px;
+    }
+
+    .hotel-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      border: 1px solid var(--line-soft);
+      background: rgba(234, 223, 202, 0.4);
+      padding: 4px 8px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .source-card {
+      padding: 18px;
+    }
+
+    .source-card h3 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .source-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .source-card li + li {
+      margin-top: 6px;
+    }
+
+    .notice {
+      border: 1px solid var(--accent);
+      background: rgba(83, 98, 68, 0.09);
+      padding: 18px 20px;
+      margin-top: 20px;
+      color: var(--accent-ink);
+    }
+
+    footer {
+      padding: 42px 0 58px;
+      border-top: 1px solid var(--line-soft);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .section-title,
+      .city,
+      .spine,
+      .route-atlas,
+      .transport-grid,
+      .facts,
+      .hotel-grid,
+      .media-grid,
+      .media-grid.four,
+      .film-grid,
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .city-copy,
+      #budapest .city-copy,
+      #vienna .city-copy,
+      #lake .city-copy,
+      #prague .city-copy {
+        width: min(100% - 28px, 960px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .city-media {
+        position: absolute;
+      }
+
+      .city-media img,
+      #vienna .city-media img,
+      #lake .city-media img,
+      #prague .city-media img {
+        left: auto;
+        right: -18%;
+        top: 6%;
+        width: 92vw;
+        height: 72%;
+        opacity: 0.1;
+        transform: rotate(1deg);
+      }
+
+      .caption {
+        display: none;
+      }
+
+      .route-card header {
+        grid-template-columns: 64px minmax(0, 1fr);
+      }
+
+      .city-copy h2 {
+        white-space: normal;
+      }
+
+      .date {
+        grid-column: 1 / -1;
+        text-align: left;
+      }
+
+      .route-line li {
+        grid-template-columns: 34px minmax(0, 1fr);
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-meta,
+      .route-notes {
+        grid-template-columns: 1fr;
+      }
+
+      #live-map {
+        min-height: 430px;
+      }
+
+      .map-tabs,
+      .day-tabs,
+      .media-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .media-heading {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .film-card {
+        grid-template-columns: 108px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .film-body h4 {
+        font-size: 24px;
+      }
+
+      .quote {
+        font-size: 18px;
+      }
+
+      .stamp {
+        right: 8px;
+        bottom: 22px;
+        width: 112px;
+        height: 112px;
+        font-size: 9px;
+      }
+
+      .caption {
+        flex-direction: column;
+        gap: 2px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#top">中欧八日旅行手札</a>
+      <nav class="nav" aria-label="页面导航">
+        <a href="#spine">路线</a>
+        <a href="#transport">交通</a>
+        <a href="#route-map">游记路线</a>
+        <a href="#budapest">布达佩斯</a>
+        <a href="#vienna">维也纳</a>
+        <a href="#lake">湖区</a>
+        <a href="#prague">布拉格</a>
+        <a href="#food">美食</a>
+        <a href="#bili-hotels">住宿附录</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="shell hero">
+      <div>
+        <div class="eyebrow">Oct 01 to Oct 09, 2026 / Hangzhou to Central Europe</div>
+        <h1>Budapest Vienna Salzkammergut Prague</h1>
+        <p>8天7晚, 从多瑙河夜景开始, 先顺路进维也纳, 再向西进入奥地利湖区, 经萨尔茨堡转往布拉格。核心原则是每天一条主线, 避开Hallstatt式商业拥挤, 把湖、山和小镇留给真正慢下来的两晚。</p>
+        <div class="hero-meta" aria-label="行程摘要">
+          <div class="meta-tile">
+            <strong>2N</strong>
+            <span>布达佩斯<br>10/02 到 10/03</span>
+          </div>
+          <div class="meta-tile">
+            <strong>1N</strong>
+            <span>维也纳<br>10/04</span>
+          </div>
+          <div class="meta-tile">
+            <strong>2N</strong>
+            <span>奥地利湖区<br>10/05 到 10/06</span>
+          </div>
+          <div class="meta-tile">
+            <strong>2N</strong>
+            <span>布拉格<br>10/07 到 10/08</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-stack" aria-label="手绘地图封面">
+        <div class="map-frame">
+          <img src="assets/budapest-map.png" alt="布达佩斯复古手绘风格路线地图">
+        </div>
+        <div class="stamp">one main line<br>per day</div>
+      </div>
+    </div>
+
+    <section id="spine" class="band">
+      <div class="shell spine">
+        <div class="lead">
+          <h2>四段旅行, 慢慢串起。</h2>
+          <p>主线改为 Budapest - Vienna - Salzkammergut - Salzburg - Prague。布达佩斯保留2晚恢复和看多瑙河, 维也纳1晚作为顺路城市过渡, 湖区住2晚避开Hallstatt, 最后经萨尔茨堡去布拉格。</p>
+        </div>
+        <div class="spine-card">
+          <b>01</b>
+          <span>布达佩斯先玩佩斯和多瑙河, 第二天用中央市场、自由桥和温泉做恢复线。</span>
+        </div>
+        <div class="spine-card">
+          <b>02</b>
+          <span>维也纳只留1晚, 用Belvedere、Karlskirche和一间咖啡馆完成高质量过渡。</span>
+        </div>
+        <div class="spine-card">
+          <b>03</b>
+          <span>湖区住2晚, St. Gilgen或Fuschl作为基地, 走Wolfgangsee、Zwolferhorn和Strobl, 主线不去Hallstatt。</span>
+        </div>
+        <div class="spine-card">
+          <b>04</b>
+          <span>布拉格住2晚, 查理大桥清晨去, 城堡区半天, 下午给约瑟夫城或Letna夕阳。</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="transport">
+      <div class="shell">
+        <div class="section-title">
+          <h2>Day 1-Day 8 交通总表</h2>
+          <p>全部日期的出行方式、预算和购票入口都集中在这里。新版路线按 Budapest 2晚 - Vienna 1晚 - 奥地利湖区2晚 - Prague 2晚重排。跨城用铁路官网购票, 湖区用 OBB + OOVV/Salzburg Verkehr 查联程, 城市内用本地交通App。2026年10月精确班次和浮动票价仍以购票日页面为准。</p>
+        </div>
+        <div class="transport-grid">
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 1 / 10.02 Fri / Budapest arrival</div>
+              <h3>BUD机场到市区</h3>
+              <ul>
+                <li>08:00落地后, 100E机场快线到Deak Ferenc ter最省心, 常见耗时约35到45分钟。</li>
+                <li>100E需单独机场票, BKK当前机场快线单程票为2500 HUF。</li>
+                <li>市区行程可买Budapest 24h/72h票; 72h当前5750 HUF, 不替代100E机场票。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://bkk.hu/en/tickets-and-passes/prices/" target="_blank" rel="noreferrer">BKK Price</a>
+              <a class="button-link" href="https://bkk.hu/en/tickets-and-passes/budapestgo/" target="_blank" rel="noreferrer">BudapestGO</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 2 / 10.03 Sat / Budapest city</div>
+              <h3>布达佩斯市内移动</h3>
+              <ul>
+                <li>中央市场 - 自由桥 - 布达侧, 以步行 + 电车/地铁为主。</li>
+                <li>建议继续使用24h/72h票, Tram 2适合多瑙河沿岸补夜景。</li>
+                <li>站台和上车后都注意验票, 纸票和电子票规则不同。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://bkk.hu/en/tickets-and-passes/prices/" target="_blank" rel="noreferrer">Tickets</a>
+              <a class="button-link" href="https://bkk.hu/en/maps/" target="_blank" rel="noreferrer">BKK Maps</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 3 / 10.04 Sun / Budapest to Vienna</div>
+              <h3>Budapest 到 Vienna</h3>
+              <ul>
+                <li>Budapest-Keleti 到 Wien Hbf 走Railjet/EuroCity直达最稳, 常见约2小时40分。</li>
+                <li>建议09:00到10:30出发, 午后到维也纳后只安排Belvedere、Karlskirche和一间咖啡馆。</li>
+                <li>预算: 动态票价约20到60 EUR/人, 早买Sparschiene或MAV折扣票更合适。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://www.oebb.at/en/" target="_blank" rel="noreferrer">OBB</a>
+              <a class="button-link" href="https://jegy.mav.hu/" target="_blank" rel="noreferrer">MAV</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 4 / 10.05 Mon / Vienna to Lake District</div>
+              <h3>Vienna 到 St. Gilgen</h3>
+              <ul>
+                <li>最顺路线: Wien Hbf - Salzburg Hbf, 再换150路巴士到Fuschl/St. Gilgen。</li>
+                <li>建议08:30到09:30出发, 含换乘约4到5小时; 下午只走湖边、码头和小镇。</li>
+                <li>预算: 火车+区域巴士约45到90 EUR/人; 住宿建议St. Gilgen或Fuschl, 不住Hallstatt。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://www.oebb.at/en/" target="_blank" rel="noreferrer">OBB</a>
+              <a class="button-link" href="https://salzburg-verkehr.at/en/" target="_blank" rel="noreferrer">SVV</a>
+              <a class="button-link" href="https://wolfgangsee.salzkammergut.at/en/" target="_blank" rel="noreferrer">Wolfgangsee</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 5 / 10.06 Tue / Lake District slow day</div>
+              <h3>湖区自然风光日</h3>
+              <ul>
+                <li>主线避开商业化Hallstatt: St. Gilgen - Zwolferhorn - Wolfgangsee船 - Strobl/Fuschl湖边。</li>
+                <li>晴天选Zwolferhorn或Schafberg高处风光; 阴天走Fuschlsee湖边和Bad Ischl咖啡。</li>
+                <li>预算: 区域巴士/船/缆车按组合约20到75 EUR/人, 当天按天气决定是否上山。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://www.5schaetze.at/en/schafbergbahn/prices-and-timetables.html" target="_blank" rel="noreferrer">Schafberg</a>
+              <a class="button-link" href="https://www.5schaetze.at/en/wolfgangseeschifffahrt/prices-and-timetables.html" target="_blank" rel="noreferrer">Boat</a>
+              <a class="button-link" href="https://wolfgangsee.salzkammergut.at/en/" target="_blank" rel="noreferrer">Lake</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 6 / 10.07 Wed / Lake to Salzburg to Prague</div>
+              <h3>湖区经 Salzburg 去布拉格</h3>
+              <ul>
+                <li>上午150路巴士回Salzburg Hbf, 可轻走Mirabell Garden和老城外观。</li>
+                <li>下午从Salzburg去Praha hl.n.; 火车通常需换乘, 巴士可能更直观, 总耗时约5.5到7小时。</li>
+                <li>预算: 湖区到Salzburg区域票+Salzburg到Prague动态票价约35到85 EUR/人。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://www.oebb.at/en/" target="_blank" rel="noreferrer">OBB</a>
+              <a class="button-link" href="https://www.cd.cz/en/" target="_blank" rel="noreferrer">CD</a>
+              <a class="button-link" href="https://regiojet.com/" target="_blank" rel="noreferrer">RegioJet</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 7 / 10.08 Thu / Prague city</div>
+              <h3>布拉格市内交通</h3>
+              <ul>
+                <li>老城和查理大桥以步行为主, 城堡区用地铁A线/Tram 22接驳更省力。</li>
+                <li>建议到达布拉格后直接买PID 72h票, 公开口径为330 CZK, 可覆盖D6-D8。</li>
+                <li>城堡区结束后去Josefov或Letna, 用同一张PID票即可。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://pid.cz/en/tickets-and-fare/" target="_blank" rel="noreferrer">PID Tickets</a>
+              <a class="button-link" href="https://app.pidlitacka.cz/" target="_blank" rel="noreferrer">Litacka</a>
+            </div>
+          </article>
+          <article class="ticket-card">
+            <div>
+              <div class="code">DAY 8 / 10.09 Fri / Prague departure</div>
+              <h3>14:00 PRG返程</h3>
+              <ul>
+                <li>公共交通: 老城/酒店 - Metro A Nadrazi Veleslavin - Trolleybus 59到机场, 常见45到60分钟。</li>
+                <li>带大件行李建议10:15到10:30出发; 打车/接送约35到50分钟但看路况。</li>
+                <li>PID 72h票覆盖普通机场公交; Airport Express另行购票, 不必优先选。</li>
+              </ul>
+            </div>
+            <div class="link-row">
+              <a class="button-link" href="https://www.prg.aero/en/public-transport-buses" target="_blank" rel="noreferrer">PRG Bus</a>
+              <a class="button-link" href="https://pid.cz/en/tickets-and-fare/" target="_blank" rel="noreferrer">PID</a>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&destination=V%C3%A1clav%20Havel%20Airport%20Prague" target="_blank" rel="noreferrer">Route</a>
+            </div>
+          </article>
+        </div>
+        <div class="notice">本版采用当地居民反馈更顺的西进路线: Budapest - Vienna - Lake District - Salzburg - Prague。湖区主线避开Hallstatt, 以St. Gilgen、Fuschlsee、Wolfgangsee、Strobl和上山/湖船天气选项为核心; 火车和巴士价格为动态预算, 下单时以OBB/MAV/SVV/RegioJet/CD页面为准。已核公开口径: BKK 100E为2500 HUF、Budapest 72h为5750 HUF; Vienna 24h为10.20 EUR; Prague 72h为330 CZK, 机场用59路无轨电车接地铁A线。</div>
+      </div>
+    </section>
+
+    <section id="route-map">
+      <div class="shell">
+        <div class="section-title">
+          <h2>游记路线</h2>
+          <p>这里用OpenStreetMap底图和Leaflet组件绘制每日city walk。点击城市和日期可以切换路线, 地图点位可打开弹窗, 也保留一键跳转Google Maps的路线入口。</p>
+        </div>
+        <div class="route-atlas">
+          <div class="map-panel">
+            <div id="live-map" role="img" aria-label="四段每日游玩路线交互地图"></div>
+          </div>
+          <aside class="map-side">
+            <div class="map-tabs" aria-label="城市选择">
+              <button class="map-tab is-active" type="button" data-city="budapest">Budapest</button>
+              <button class="map-tab" type="button" data-city="vienna">Vienna</button>
+              <button class="map-tab" type="button" data-city="lake">Lake District</button>
+              <button class="map-tab" type="button" data-city="prague">Prague</button>
+            </div>
+            <div class="day-tabs" aria-label="每日路线选择"></div>
+            <div class="route-summary">
+              <h3 id="map-route-title">抵达后的佩斯夜景线</h3>
+              <p id="map-route-note">抵达日不进重景点, 先用河岸和夜景建立城市感。</p>
+            </div>
+            <ol class="map-stop-list" id="map-stop-list"></ol>
+            <div class="map-note">底图来自OpenStreetMap。路线线条用于旅行规划和相对方位参考, 实际步行和公交请以当天Google Maps或本地交通App为准。</div>
+            <a class="button-link" id="map-google-link" href="#" target="_blank" rel="noreferrer">Open Google Route</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="budapest" class="city shell">
+      <aside class="city-media">
+        <figure>
+          <img src="assets/budapest-map.png" alt="布达佩斯手绘地图与多瑙河路线">
+          <figcaption class="caption">
+            <span>Budapest / Danube First</span>
+            <span>2 nights</span>
+          </figcaption>
+        </figure>
+      </aside>
+      <div class="city-copy">
+        <div class="city-kicker">Act I / Budapest</div>
+        <h2>布达佩斯两日恢复</h2>
+        <p class="city-intro">抵达日不安排重博物馆, 让第一眼给圣伊什特万、国会大厦和多瑙河。第二天早上去中央市场, 下午过自由桥到盖勒特山脚和温泉。New York Cafe只作为可替换咖啡点, 不再占用第三天。</p>
+        <div class="day-grid">
+          <article class="route-card">
+            <header>
+              <div class="day-no">1</div>
+              <div>
+                <h3>佩斯夜景线</h3>
+              </div>
+              <div class="date"><b>DAY 1</b><span>10/02 Fri</span></div>
+            </header>
+            <ol class="route-line">
+              <li>08:00到达后先去酒店寄存, 不急着进收费景点。</li>
+              <li>圣伊什特万圣殿 - Liberty Square - 匈牙利国会大厦外观。</li>
+              <li>多瑙河鞋履纪念碑 - 链子桥 - 布达城堡外侧观景。</li>
+              <li>日落后沿河看灯光, 晚餐安排在佩斯侧, 方便回酒店。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>咖啡</b>Espresso Embassy 或 Gerloczy, 都适合抵达日慢慢回血。</div>
+              <div class="note"><b>餐厅</b>Hungarikum Bistro 需提前订位, 或选附近轻松小馆。</div>
+              <div class="note"><b>交通</b>买24小时或72小时票更省心, 地铁和电车进站要核验。</div>
+            </div>
+            <div class="route-footer">
+              <span>walk + tram 2</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=St.%20Stephen%27s%20Basilica%2C%20Budapest&destination=Buda%20Castle%2C%20Budapest&waypoints=Liberty%20Square%2C%20Budapest%7CHungarian%20Parliament%20Building%2C%20Budapest%7CShoes%20on%20the%20Danube%20Bank%2C%20Budapest%7CChain%20Bridge%2C%20Budapest&travelmode=walking" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+
+          <article class="route-card">
+            <header>
+              <div class="day-no">2</div>
+              <div>
+                <h3>中央市场与自由桥</h3>
+              </div>
+              <div class="date"><b>DAY 2</b><span>10/03 Sat</span></div>
+            </header>
+            <ol class="route-line">
+              <li>08:00到中央市场, 先看蔬果、肉摊和Rétes酥皮卷, 避开午间拥挤。</li>
+              <li>市场二层可吃Fakanal, 也可以只把这里当采样点。</li>
+              <li>自由桥 - Gellert Cave Church - 盖勒特山脚轻爬或拍桥景。</li>
+              <li>下午安排Rudas Baths, 更偏土耳其浴氛围。Gellert浴场如遇修缮则不列主计划。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>视频严选</b>中央市场建议带现金, 早上8到9点体验最好。</div>
+              <div class="note"><b>小众线</b>Bartok Bela Boulevard有书店、画廊和当地咖啡。</div>
+              <div class="note"><b>夜景</b>电车2号线沿多瑙河一段很适合夜晚补景。</div>
+            </div>
+            <div class="route-footer">
+              <span>market 08:00 / bath afternoon</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=Central%20Market%20Hall%2C%20Budapest&destination=Rudas%20Baths%2C%20Budapest&waypoints=Liberty%20Bridge%2C%20Budapest%7CGellert%20Hill%20Cave%2C%20Budapest%7CBartok%20Bela%20ut%2C%20Budapest&travelmode=walking" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="vienna" class="city shell">
+      <aside class="city-media">
+        <figure>
+          <img src="assets/vienna-map.png" alt="维也纳手绘地图与内城路线">
+          <figcaption class="caption">
+            <span>Vienna / Coffee and Museums</span>
+            <span>1 night</span>
+          </figcaption>
+        </figure>
+      </aside>
+      <div class="city-copy">
+        <div class="city-kicker">Act II / Vienna</div>
+        <h2>维也纳一夜过渡</h2>
+        <p class="city-intro">维也纳从“深玩两天”改成顺路高质量停留。上午从布达佩斯到站, 午后把Upper Belvedere、Karlskirche和内城咖啡馆串成一条, 第二天一早向西去湖区。</p>
+        <div class="day-grid">
+          <article class="route-card">
+            <header>
+              <div class="day-no">3</div>
+              <div>
+                <h3>到站后看Klimt</h3>
+              </div>
+              <div class="date"><b>DAY 3</b><span>10/04 Sun</span></div>
+            </header>
+            <ol class="route-line">
+              <li>上午从Budapest-Keleti坐直达火车到Wien Hbf。</li>
+              <li>若住Hbf或Andaz附近, 午后直接去Upper Belvedere看Klimt。</li>
+              <li>Belvedere花园 - Karlskirche - Secession - Naschmarkt。</li>
+              <li>晚间到St. Stephen's Cathedral和Graben一带散步。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>门票</b>Upper Belvedere官网当前显示成人23 EUR, 需预约时段。</div>
+              <div class="note"><b>时间</b>Upper Belvedere常规周一到周日9:00到18:00。</div>
+              <div class="note"><b>咖啡</b>Cafe Central和Demel偏经典, Sperl或Kleines Cafe更适合文艺city walk。</div>
+            </div>
+            <div class="route-footer">
+              <span>train first / belvedere after check-in</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=Wien%20Hbf&destination=St.%20Stephen%27s%20Cathedral%2C%20Vienna&waypoints=Upper%20Belvedere%2C%20Vienna%7CKarlskirche%2C%20Vienna%7CSecession%2C%20Vienna%7CNaschmarkt%2C%20Vienna&travelmode=transit" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="lake" class="city shell">
+      <aside class="city-media">
+        <figure>
+          <img src="assets/lake-map.svg" alt="奥地利湖区手绘风格路线地图">
+          <figcaption class="caption">
+            <span>Salzkammergut / Local Lakes</span>
+            <span>2 nights</span>
+          </figcaption>
+        </figure>
+      </aside>
+      <div class="city-copy">
+        <div class="city-kicker">Act III / Salzkammergut</div>
+        <h2>湖光深处,不赶热闹</h2>
+        <p class="city-intro">湖区不把Hallstatt放主线, 改走当地度假感更强的St. Gilgen、Fuschlsee、Wolfgangsee和Strobl。住宿建议放在St. Gilgen或Fuschl, 交通接Salzburg 150路巴士顺, 也更接近你们想要的人少、自然、湖边慢行。</p>
+        <div class="day-grid">
+          <article class="route-card">
+            <header>
+              <div class="day-no">4</div>
+              <div>
+                <h3>进湖区, 先看湖面</h3>
+              </div>
+              <div class="date"><b>DAY 4</b><span>10/05 Mon</span></div>
+            </header>
+            <ol class="route-line">
+              <li>上午Wien Hbf到Salzburg Hbf, 换150路巴士进Fuschl或St. Gilgen。</li>
+              <li>下午只走St. Gilgen湖畔、码头、老街和Mozartplatz, 不急着上山。</li>
+              <li>若住Fuschl, 改成Fuschlsee湖边步道和黄昏湖面, 更安静。</li>
+              <li>晚餐选住宿小镇, 当天不再跨湖追景点, 给两晚湖区开一个慢节奏。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>住宿</b>首选St. Gilgen或Fuschl, 兼顾湖景和交通。下午茶可放Cafe Dallmann。</div>
+              <div class="note"><b>交通</b>Salzburg 150路连接Salzburg、Fuschl、St. Gilgen、Strobl。</div>
+              <div class="note"><b>避开</b>Hallstatt不列主线, 避免商业化和一日团拥挤。</div>
+            </div>
+            <div class="route-footer">
+              <span>train + bus 150 / lake arrival</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=Salzburg%20Hbf&destination=St.%20Gilgen&waypoints=Fuschl%20am%20See%7CWolfgangsee%20Lake&travelmode=transit" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+
+          <article class="route-card">
+            <header>
+              <div class="day-no">5</div>
+              <div>
+                <h3>Wolfgangsee自然线</h3>
+              </div>
+              <div class="date"><b>DAY 5</b><span>10/06 Tue</span></div>
+            </header>
+            <ol class="route-line">
+              <li>晴天优先Zwolferhorn缆车或SchafbergBahn二选一, 只选一个高处风光。</li>
+              <li>中午回到Wolfgangsee湖边, 坐船或巴士串St. Gilgen - St. Wolfgang - Strobl。</li>
+              <li>下午留给Strobl湖岸、草地和小路, 比St. Wolfgang镇中心更松弛。</li>
+              <li>阴雨天改Bad Ischl + Cafe Zauner + Fuschlsee短步道, 不硬上山。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>高处</b>Zwolferhorn更贴St. Gilgen, Schafberg更经典但游客更多。</div>
+              <div class="note"><b>湖船</b>Wolfgangsee船班季节运行, 出发前7天复查时刻。雨天改Bad Ischl和Zauner。</div>
+              <div class="note"><b>小众</b>Strobl和Fuschlsee比Hallstatt更接近本地度假氛围。</div>
+            </div>
+            <div class="route-footer">
+              <span>one mountain + one lake route</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=St.%20Gilgen&destination=Strobl&waypoints=Zwolferhorn%7CSt.%20Wolfgang%20im%20Salzkammergut%7CWolfgangsee&travelmode=transit" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="prague" class="city shell">
+      <aside class="city-media">
+        <figure>
+          <img src="assets/prague-map.png" alt="布拉格手绘地图与城堡旧城路线">
+          <figcaption class="caption">
+            <span>Prague / Salzburg Arrival</span>
+            <span>2 nights</span>
+          </figcaption>
+        </figure>
+      </aside>
+      <div class="city-copy">
+        <div class="city-kicker">Act IV / Prague</div>
+        <h2>布拉格清晨黄昏</h2>
+        <p class="city-intro">从湖区经Salzburg转到布拉格, 抵达日只走老城和查理大桥, 不进太多馆。第二天清晨上桥, 上午进城堡区, 下午根据天气选约瑟夫城、国家博物馆或Letna夕阳。</p>
+        <div class="day-grid">
+          <article class="route-card">
+            <header>
+              <div class="day-no">6</div>
+              <div>
+                <h3>老城日落线</h3>
+              </div>
+              <div class="date"><b>DAY 6</b><span>10/07 Wed</span></div>
+            </header>
+            <ol class="route-line">
+              <li>上午从湖区回Salzburg Hbf, 如时间允许只轻走Mirabell Garden或老城外观。</li>
+              <li>下午Salzburg到Praha hl.n., 抵达后先寄存或入住。</li>
+              <li>Municipal House - Powder Tower - Old Town Square - Astronomical Clock。</li>
+              <li>傍晚走到Charles Bridge和Kampa Island, 晚餐依住宿位置选Lokál或U Kroka。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>拍照</b>Municipal House和Powder Tower适合复古封面感。</div>
+              <div class="note"><b>咖啡</b>Cafe Louvre或EMA Espresso Bar, 都比景点边缘更好控节奏。</div>
+              <div class="note"><b>小众</b>Kampa岛和河岸比桥面更适合拍人像。</div>
+            </div>
+            <div class="route-footer">
+              <span>old town sunset</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=Praha%20hl.n.&destination=Kampa%20Island%2C%20Prague&waypoints=Municipal%20House%2C%20Prague%7CPowder%20Tower%2C%20Prague%7COld%20Town%20Square%2C%20Prague%7CCharles%20Bridge%2C%20Prague&travelmode=walking" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+
+          <article class="route-card">
+            <header>
+              <div class="day-no">7</div>
+              <div>
+                <h3>大桥清晨与城堡</h3>
+              </div>
+              <div class="date"><b>DAY 7</b><span>10/08 Thu</span></div>
+            </header>
+            <ol class="route-line">
+              <li>日出前后到Charles Bridge, 只拍20到30分钟就走。</li>
+              <li>Malostranska - Prague Castle - St. Vitus Cathedral - Old Royal Palace - Golden Lane。</li>
+              <li>下午走Josefov: Old-New Synagogue, Spanish Synagogue, Old Jewish Cemetery。</li>
+              <li>如果天气好, 17:00前后上Letna Metronome看夕阳。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>城堡</b>10月属于夏季时段, 历史建筑9:00到17:00, 大教堂周日12:00后。</div>
+              <div class="note"><b>约瑟夫城</b>10月8日为开放日, 犹太博物馆10月上旬通常9:00到18:00。</div>
+              <div class="note"><b>雨天</b>National Museum或Mucha Museum替代Letna, 不硬爬观景点。</div>
+            </div>
+            <div class="route-footer">
+              <span>bridge before crowd</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&origin=Charles%20Bridge%2C%20Prague&destination=Letna%20Metronome%2C%20Prague&waypoints=Prague%20Castle%2C%20Prague%7CSt.%20Vitus%20Cathedral%2C%20Prague%7CGolden%20Lane%2C%20Prague%7COld%20Jewish%20Cemetery%2C%20Prague%7CSpanish%20Synagogue%2C%20Prague&travelmode=walking" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+
+          <article class="route-card">
+            <header>
+              <div class="day-no">8</div>
+              <div>
+                <h3>早餐后去机场</h3>
+              </div>
+              <div class="date"><b>DAY 8</b><span>10/09 Fri</span></div>
+            </header>
+            <ol class="route-line">
+              <li>08:30轻早餐, 不再安排收费景点。</li>
+              <li>09:30到10:00退房, 处理退税资料和行李重量。</li>
+              <li>10:30左右离开市区去PRG机场, 给14:00航班留足余量。</li>
+            </ol>
+            <div class="route-notes">
+              <div class="note"><b>住宿</b>最后两晚建议住老城东侧或火车站到老城之间。</div>
+              <div class="note"><b>交通</b>带大件行李优先打车或酒店接送。</div>
+              <div class="note"><b>余量</b>机场购物和退税比多走一个景点更重要。</div>
+            </div>
+            <div class="route-footer">
+              <span>leave hotel around 10:30</span>
+              <a class="button-link" href="https://www.google.com/maps/dir/?api=1&destination=V%C3%A1clav%20Havel%20Airport%20Prague&travelmode=driving" target="_blank" rel="noreferrer">Google Route</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="food" class="shell">
+      <div class="section-title">
+        <h2>B站与社媒餐厅咖啡表</h2>
+        <p>这里单独整理视频里明确出现、评论补充、社媒高频推荐或与路线高度重合的餐厅咖啡馆。客单价是按公开菜单和常见点单方式估算的旅行预算, 正式下单前以店内菜单为准。</p>
+      </div>
+      <div class="food-table-wrap">
+        <table class="food-table">
+          <thead>
+            <tr>
+              <th>店名</th>
+              <th>城市</th>
+              <th>来源线索</th>
+              <th>推荐理由</th>
+              <th>客单价</th>
+              <th>必吃或必点</th>
+              <th>适合放哪天</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Central Market Rétes Stall</td>
+              <td>布达佩斯</td>
+              <td>欧洲_Miaomiao中央市场详解</td>
+              <td>创作者细到摊位号的市场严选, 适合早上边逛边吃。</td>
+              <td>€4到8</td>
+              <td>túró奶酪卷, 酸樱桃罂粟籽卷, 李子卷</td>
+              <td>D2 08:00市场线</td>
+            </tr>
+            <tr>
+              <td>Fakanal Etterem</td>
+              <td>布达佩斯</td>
+              <td>原来是西门大嫂中央市场段</td>
+              <td>中央市场二层顺路, 不需要为餐厅单独绕路。</td>
+              <td>€12到22</td>
+              <td>goulash, chicken paprikash, Hungarian stew</td>
+              <td>D2午餐备选</td>
+            </tr>
+            <tr>
+              <td>New York Cafe</td>
+              <td>布达佩斯</td>
+              <td>多支vlog与New York Palace住宿线</td>
+              <td>复古建筑氛围强, 更适合拍照和甜品咖啡, 不建议执着正餐。</td>
+              <td>€25到45</td>
+              <td>hot chocolate, Dobos cake, espresso drinks</td>
+              <td>D1或D2替换咖啡点</td>
+            </tr>
+            <tr>
+              <td>For Sale Pub</td>
+              <td>布达佩斯</td>
+              <td>原来是西门大嫂vlog提及</td>
+              <td>市场和自由桥附近, 装饰感强, 适合旅行感晚餐。</td>
+              <td>€18到32</td>
+              <td>goulash soup, beef stew, paprika dishes</td>
+              <td>D2晚餐备选</td>
+            </tr>
+            <tr>
+              <td>Cafe Central</td>
+              <td>维也纳</td>
+              <td>TARO维也纳vlog提及</td>
+              <td>维也纳咖啡馆经典样本, 建筑和甜点都适合手札画面。</td>
+              <td>€20到35</td>
+              <td>Wiener melange, apple strudel, Kaiserschmarrn</td>
+              <td>D3晚间或次日早场</td>
+            </tr>
+            <tr>
+              <td>Cafe Demel</td>
+              <td>维也纳</td>
+              <td>TARO维也纳vlog提及</td>
+              <td>比正餐更适合甜点停靠, 与霍夫堡线高度顺路。</td>
+              <td>€18到35</td>
+              <td>Sachertorte, Anna Demel torte, hot chocolate</td>
+              <td>D3内城甜点停靠</td>
+            </tr>
+            <tr>
+              <td>Cafe Sperl</td>
+              <td>维也纳</td>
+              <td>Before Sunrise氛围线和旅拍vlog</td>
+              <td>更文艺, 更像旧维也纳日常, 人流通常比头部咖啡馆温和。</td>
+              <td>€15到28</td>
+              <td>Sperl torte, melange, light lunch</td>
+              <td>D3傍晚</td>
+            </tr>
+            <tr>
+              <td>Kleines Cafe</td>
+              <td>维也纳</td>
+              <td>Before Sunrise取景氛围 + 小红书/旅拍高频</td>
+              <td>Franziskanerplatz小广场很有旧城生活感, 比大咖啡馆更适合city walk停顿。</td>
+              <td>€12到25</td>
+              <td>melange, open sandwich, house wine</td>
+              <td>D3晚间散步线</td>
+            </tr>
+            <tr>
+              <td>Bitzinger Wurstelstand Albertina</td>
+              <td>维也纳</td>
+              <td>维也纳街头小吃高频</td>
+              <td>歌剧院和Albertina旁, 不想排咖啡馆时用来补一顿快餐很顺。</td>
+              <td>€8到15</td>
+              <td>käsekrainer, bratwurst, potato salad</td>
+              <td>D3夜间备选</td>
+            </tr>
+            <tr>
+              <td>Cafe Dallmann</td>
+              <td>St. Gilgen</td>
+              <td>Wolfgangsee湖区咖啡高频</td>
+              <td>St. Gilgen老街和湖边路线中间, 适合把湖区下午压慢。</td>
+              <td>€12到25</td>
+              <td>homemade cakes, apfelstrudel, coffee</td>
+              <td>D4抵达后或D5下午</td>
+            </tr>
+            <tr>
+              <td>Zauner Bad Ischl</td>
+              <td>Bad Ischl</td>
+              <td>湖区雨天/皇室小镇路线高频</td>
+              <td>如果D5天气不适合上山, Bad Ischl + Zauner是很稳的室内甜点替代线。</td>
+              <td>€15到30</td>
+              <td>Zaunerstollen, cakes, hot chocolate</td>
+              <td>D5雨天备选</td>
+            </tr>
+            <tr>
+              <td>Dorf Alm zu St. Wolfgang</td>
+              <td>St. Wolfgang</td>
+              <td>Wolfgangsee路线餐厅备选</td>
+              <td>靠近St. Wolfgang游船与小镇线, 适合D5不赶路时吃一顿湖区正餐。</td>
+              <td>€20到38</td>
+              <td>schnitzel, trout, seasonal Austrian dishes</td>
+              <td>D5午餐或晚餐</td>
+            </tr>
+            <tr>
+              <td>Cafe Louvre</td>
+              <td>布拉格</td>
+              <td>布拉格咖啡馆高频 + 城市文化线</td>
+              <td>老城和国家大街附近, 文学气质强, 适合抵达后的低强度晚餐或甜点。</td>
+              <td>€12到28</td>
+              <td>svíčková, cakes, hot chocolate</td>
+              <td>D6晚间或D7下午</td>
+            </tr>
+            <tr>
+              <td>EMA Espresso Bar</td>
+              <td>布拉格</td>
+              <td>旅拍vlog与咖啡路线高频</td>
+              <td>靠近老城东侧和火车站方向, 适合D6抵达或D7清晨补咖啡。</td>
+              <td>€6到15</td>
+              <td>flat white, batch brew, pastry</td>
+              <td>D6/D7咖啡</td>
+            </tr>
+            <tr>
+              <td>Lokál Dlouhááá</td>
+              <td>布拉格</td>
+              <td>布拉格本地餐厅路线重合</td>
+              <td>老城东侧顺路, 适合第一晚吃捷克菜和tank beer。</td>
+              <td>€15到25</td>
+              <td>tank beer, svíčková, fried cheese</td>
+              <td>D6晚餐</td>
+            </tr>
+            <tr>
+              <td>U Kroka</td>
+              <td>布拉格</td>
+              <td>布拉格本地菜高评价线</td>
+              <td>更适合和Vysehrad或河边散步搭配, 比老城核心餐厅更像认真吃一顿。</td>
+              <td>€18到32</td>
+              <td>duck leg, beef goulash, pork ribs</td>
+              <td>D7或D8早午餐</td>
+            </tr>
+            <tr>
+              <td>Myšák</td>
+              <td>布拉格</td>
+              <td>甜点咖啡社媒高频</td>
+              <td>新城一侧复古甜点店, 适合下雨或逛完博物馆后停一下。</td>
+              <td>€8到18</td>
+              <td>venecek, cakes, coffee</td>
+              <td>D7下午备选</td>
+            </tr>
+            <tr>
+              <td>Kantyna</td>
+              <td>布拉格</td>
+              <td>华生Going本地餐厅方向</td>
+              <td>肉类主题明确, 适合不想吃景区餐的晚餐。</td>
+              <td>€20到40</td>
+              <td>beef tartare, butcher's steak, grilled meat</td>
+              <td>D7晚餐</td>
+            </tr>
+            <tr>
+              <td>Yami Sushi House</td>
+              <td>布拉格</td>
+              <td>华生Going评论区校正</td>
+              <td>作为连续中欧菜后的换口味选择, 不放主线但保留备选。</td>
+              <td>€20到35</td>
+              <td>sushi set, salmon roll, warm miso soup</td>
+              <td>D6或D7备选</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="appendix" class="appendix">
+      <div class="shell">
+        <h2>住宿附录</h2>
+        <p class="appendix-copy">住宿先看B站视频中能确认的酒店, 再看Hyatt和路线候选。价格会随日期波动, 正式预订时再用10月2到9日分城查询。未公开酒店名的视频不强行猜。</p>
+
+        <div class="media-section" id="bili-hotels">
+          <div class="media-heading">
+            <h3>B站住宿参考</h3>
+            <p>只收视频画面、标题、简介或评论中可以确认名称的住宿。布拉格部分有视频出现酒店介绍但未公开酒店名, 暂不列入推荐。</p>
+          </div>
+          <div class="media-grid">
+            <article class="media-card">
+              <img src="https://budapest.com/storage/1149/new-york-palace-hotel-budapest.jpg" alt="New York Palace Budapest酒店外观">
+              <div class="media-body">
+                <div class="rank">Bilibili / Budapest / confirmed</div>
+                <h4>New York Palace</h4>
+                <p>来源线索: 原来是西门大嫂布达佩斯vlog中出现的住宿。复古戏剧感强, 可以把New York Cafe和住宿体验合并。</p>
+                <div class="tag-list"><span class="tag">video hotel</span><span class="tag">grand cafe</span><span class="tag">D3 nearby</span></div>
+                <div class="media-actions">
+                  <a class="button-link" href="https://www.anantara.com/en/new-york-palace-budapest" target="_blank" rel="noreferrer">Official</a>
+                  <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=New%20York%20Palace%20Budapest" target="_blank" rel="noreferrer">Map</a>
+                </div>
+              </div>
+            </article>
+            <article class="media-card">
+              <img src="https://images.trvl-media.com/lodging/66000000/65710000/65706500/65706414/7eedceed.jpg?impolicy=resizecrop&ra=fit&rw=598" alt="Hotel Secession an der Oper酒店入口">
+              <div class="media-body">
+                <div class="rank">Bilibili / Vienna / confirmed</div>
+                <h4>Hotel Secession an der Oper</h4>
+                <p>来源线索: 维也纳旅行vlog中明确出现的住宿。靠近Secession、Naschmarkt和歌剧院, 对两晚city walk很友好。</p>
+                <div class="tag-list"><span class="tag">video hotel</span><span class="tag">opera area</span><span class="tag">walkable</span></div>
+                <div class="media-actions">
+                  <a class="button-link" href="https://www.hotel-secession.at/" target="_blank" rel="noreferrer">Official</a>
+                  <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Hotel%20Secession%20an%20der%20Oper" target="_blank" rel="noreferrer">Map</a>
+                </div>
+              </div>
+            </article>
+            <article class="source-card">
+              <h3>未列入的情况</h3>
+              <ul>
+                <li>布拉格vlog里有酒店介绍片段, 但公开信息不足以确认酒店名。</li>
+                <li>奥地利湖区已加入新版主线, 但B站视频住宿尚未确认到具体酒店名, 后续需按St. Gilgen、Fuschl、Strobl三地单独筛选。</li>
+                <li>后续如果你补充视频字幕或酒店画面截图, 可以继续追加到这一栏。</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="media-section">
+          <div class="media-heading">
+            <h3>Hyatt与路线候选</h3>
+            <p>这一组按路线便利、复古感和预算压力整理, 用来和B站住宿参考一起做最终预订比较。</p>
+          </div>
+
+        <div class="media-grid">
+          <article class="media-card">
+            <img src="https://unitedcharity.wavecdn.net/var/charity_site/storage/images/hilfsorganisationen/make-a-wish-oesterreich/park-hyatt-wien3/1001617-14-ger-DE/Park-Hyatt-Wien_reference.jpg" alt="Park Hyatt Vienna酒店外观">
+            <div class="media-body">
+              <div class="rank">Hyatt / Vienna / top location</div>
+              <h4>Park Hyatt Vienna</h4>
+              <p>内城核心, 适合2晚都围绕霍夫堡和咖啡馆散步。预算压力最高, 但动线最舒服。</p>
+              <div class="tag-list"><span class="tag">luxury</span><span class="tag">old town</span><span class="tag">walkable</span></div>
+              <div class="media-actions">
+                <a class="button-link" href="https://www.hyatt.com/park-hyatt/en-US/vieph-park-hyatt-vienna" target="_blank" rel="noreferrer">Official</a>
+                <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Park%20Hyatt%20Vienna" target="_blank" rel="noreferrer">Map</a>
+              </div>
+            </div>
+          </article>
+          <article class="media-card">
+            <img src="https://www.americanexpress.com/en-us/travel/discover/photos/482797/87709/1600/hotel-exteriors.jpg?ch=560" alt="Andaz Prague酒店外观">
+            <div class="media-body">
+              <div class="rank">Hyatt / Prague / best balance</div>
+              <h4>Andaz Prague</h4>
+              <p>近Municipal House和老城东侧, 到Praha hl.n.也方便。最后两晚少折腾的优先选项。</p>
+              <div class="tag-list"><span class="tag">luxury</span><span class="tag">station friendly</span><span class="tag">old town edge</span></div>
+              <div class="media-actions">
+                <a class="button-link" href="https://www.hyatt.com/andaz/en-US/prgaz-andaz-prague" target="_blank" rel="noreferrer">Official</a>
+                <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Andaz%20Prague" target="_blank" rel="noreferrer">Map</a>
+              </div>
+            </div>
+          </article>
+          <article class="media-card">
+            <img src="https://media.cntraveler.com/photos/672e2ff59a7e0ccc64f3a08a/16%3A9/w_320%2Cc_limit/Pa%25CC%2581risi%2520Udvar%2520Hotel%2520Budapest-sept22-pr-global.jpg" alt="Parisi Udvar Hotel Budapest建筑内景">
+            <div class="media-body">
+              <div class="rank">Budapest / architecture</div>
+              <h4>Parisi Udvar Hotel Budapest</h4>
+              <p>建筑装饰感很贴合欧式复古主题, 适合把酒店也作为旅拍点。Hyatt归属预订前再确认。</p>
+              <div class="tag-list"><span class="tag">retro</span><span class="tag">central</span><span class="tag">verify</span></div>
+              <div class="media-actions">
+                <a class="button-link" href="https://www.hyatt.com/" target="_blank" rel="noreferrer">Search</a>
+                <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Parisi%20Udvar%20Hotel%20Budapest" target="_blank" rel="noreferrer">Map</a>
+              </div>
+            </div>
+          </article>
+          <article class="media-card">
+            <img src="https://lindner-hotel-prague-castle.hotel-dir.com/data/Photos/OriginalPhoto/14383/1438309/1438309645.JPEG" alt="Lindner Hotel Prague Castle实景图">
+            <div class="media-body">
+              <div class="rank">Hyatt / Prague / quiet side</div>
+              <h4>Lindner Hotel Prague Castle</h4>
+              <p>更靠城堡区, 安静但离火车站和老城餐饮略远。适合不介意打车的人。</p>
+              <div class="tag-list"><span class="tag">castle</span><span class="tag">quiet</span><span class="tag">verify</span></div>
+              <div class="media-actions">
+                <a class="button-link" href="https://www.hyatt.com/" target="_blank" rel="noreferrer">Search</a>
+                <a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Lindner%20Hotel%20Prague%20Castle" target="_blank" rel="noreferrer">Map</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        </div>
+
+        <div class="media-section" id="photo-spots">
+          <div class="media-heading">
+            <h3>旅拍地点</h3>
+            <p>这些点不作为“必须打卡”, 而是塞进对应city walk里的低成本补光点。原则是顺路、好拍、不会吃掉半天。</p>
+          </div>
+          <div class="media-grid four">
+            <article class="media-card">
+              <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjYRE0vAYI05VDg93GUMfsSC6T-jp4MOCjT6chQgXLyh8sl_SmK3cxGi2FHC5YLd4UGvPS-_0uF33s5O-9HhCIMqReZDGQ-4so-sXPfO_Hz86TrBCYQ1Y5QmH9758KTTF55LKsSXMDBLAc/w1200-h630-p-k-no-nu/Budapest.jpg" alt="布达佩斯渔人堡实景">
+              <div class="media-body">
+                <h4>渔人堡侧面楼梯</h4>
+                <p>正面平台人多, 侧面楼梯和回廊更适合拍人像。建议D3清晨或傍晚。</p>
+                <div class="media-actions"><a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Fisherman%27s%20Bastion%20Budapest" target="_blank" rel="noreferrer">Map</a><a class="button-link" href="#budapest">Route</a></div>
+              </div>
+            </article>
+            <article class="media-card">
+              <img src="https://dailynewshungary.b-cdn.net/wp-content/uploads/2025/01/Early-spring-arrives-in-Hungary.jpg" alt="布达佩斯自由桥城市景观">
+              <div class="media-body">
+                <h4>自由桥清晨</h4>
+                <p>D2中央市场后顺路过桥。桥体绿色和电车线很适合复古色调。</p>
+                <div class="media-actions"><a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Liberty%20Bridge%20Budapest" target="_blank" rel="noreferrer">Map</a><a class="button-link" href="#budapest">Route</a></div>
+              </div>
+            </article>
+            <article class="media-card">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Karlskirche_Abendsonne_1.jpg/500px-Karlskirche_Abendsonne_1.jpg" alt="维也纳Karlskirche水池倒影">
+              <div class="media-body">
+                <h4>Karlskirche水池</h4>
+                <p>D4从Belvedere走向内城时顺路。晴天看倒影, 阴天看穹顶轮廓。</p>
+                <div class="media-actions"><a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Karlskirche%20Vienna" target="_blank" rel="noreferrer">Map</a><a class="button-link" href="#vienna">Route</a></div>
+              </div>
+            </article>
+            <article class="media-card">
+              <img src="https://prague-now.com/wp-content/uploads/Letna-Park-2-1200x630.jpg" alt="布拉格Letna Park夕阳视角">
+              <div class="media-body">
+                <h4>Letna Metronome</h4>
+                <p>D7下午天气好再上。视角比查理大桥更开阔, 适合拍红屋顶和河弯。</p>
+                <div class="media-actions"><a class="button-link" href="https://www.google.com/maps/search/?api=1&query=Letna%20Metronome%20Prague" target="_blank" rel="noreferrer">Map</a><a class="button-link" href="#prague">Route</a></div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="media-section" id="film-spots">
+          <div class="media-heading">
+            <h3>电影剧照打卡</h3>
+            <p>电影模块按“能不能和行程自然重合”筛选。The Grand Budapest Hotel只作为布达佩斯复古氛围参考, 不标成真实布达佩斯取景。</p>
+          </div>
+          <div class="film-grid">
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/en/1/1c/The_Grand_Budapest_Hotel.png" alt="The Grand Budapest Hotel电影海报">
+              <div class="film-body">
+                <h4>The Grand Budapest Hotel</h4>
+                <p class="quote">"Keep your hands off my lobby boy!"</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约8.1 / Rotten Tomatoes 92%</span>
+                  <span>打卡: Parisi Udvar, New York Palace, Gresham Palace。同类氛围, 非真实取景。</span>
+                  <span>城市: Budapest mood board</span>
+                </div>
+              </div>
+            </article>
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/en/d/da/Before_Sunrise_poster.jpg" alt="Before Sunrise电影海报">
+              <div class="film-body">
+                <h4>Before Sunrise</h4>
+                <p class="quote">"I like to feel his eyes on me."</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约8.1 / Rotten Tomatoes 100%</span>
+                  <span>打卡: 维也纳旧城、唱片店氛围、河岸、Cafe Sperl。</span>
+                  <span>城市: Vienna city walk</span>
+                </div>
+              </div>
+            </article>
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/The_Third_Man_%281949_American_theatrical_poster%29.jpg/250px-The_Third_Man_%281949_American_theatrical_poster%29.jpg" alt="The Third Man电影海报">
+              <div class="film-body">
+                <h4>The Third Man</h4>
+                <p class="quote">"Nobody thinks in terms of human beings."</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约8.1 / Rotten Tomatoes 99%</span>
+                  <span>打卡: 维也纳老城角落、摩天轮、黑色电影感街巷。</span>
+                  <span>城市: Vienna noir route</span>
+                </div>
+              </div>
+            </article>
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/MissionImpossiblePoster.jpg/250px-MissionImpossiblePoster.jpg" alt="Mission Impossible电影海报">
+              <div class="film-body">
+                <h4>Mission: Impossible</h4>
+                <p class="quote">"Your mission, should you choose to accept it."</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约7.2 / Rotten Tomatoes约65%</span>
+                  <span>打卡: 布拉格旧城、查理大桥周边、河岸夜色。</span>
+                  <span>城市: Prague old town</span>
+                </div>
+              </div>
+            </article>
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/en/2/2f/Amadeusmov.jpg" alt="Amadeus电影海报">
+              <div class="film-body">
+                <h4>Amadeus</h4>
+                <p class="quote">"Forgive me, Majesty. I am a vulgar man."</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约8.4 / Rotten Tomatoes约89%</span>
+                  <span>打卡: Estates Theatre, 旧城剧院氛围, 可接D6老城线。</span>
+                  <span>城市: Prague theatre route</span>
+                </div>
+              </div>
+            </article>
+            <article class="film-card">
+              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/82/Casino_Royale_%282006_film_poster%29.jpg/250px-Casino_Royale_%282006_film_poster%29.jpg" alt="Casino Royale电影海报">
+              <div class="film-body">
+                <h4>Casino Royale</h4>
+                <p class="quote">"The name's Bond. James Bond."</p>
+                <div class="film-meta">
+                  <span>评分: IMDb约8.0 / Rotten Tomatoes 94%</span>
+                  <span>打卡: 布拉格及捷克温泉城氛围延伸, 主线只放老城夜景参考。</span>
+                  <span>城市: Prague extension</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="source-grid" style="margin-top:34px;">
+          <article class="source-card">
+            <h3>官方信息入口</h3>
+            <ul>
+              <li><a href="https://bkk.hu/en/tickets-and-passes/prices/" target="_blank" rel="noreferrer">BKK Budapest ticket prices</a></li>
+              <li><a href="https://www.wien.info/en/travel-info/transport/tickets-361360" target="_blank" rel="noreferrer">Vienna public transport tickets</a></li>
+              <li><a href="https://salzburg-verkehr.at/en/" target="_blank" rel="noreferrer">Salzburg Verkehr route 150 and tickets</a></li>
+              <li><a href="https://www.5schaetze.at/en/wolfgangseeschifffahrt/prices-and-timetables.html" target="_blank" rel="noreferrer">Wolfgangsee boat timetable</a></li>
+              <li><a href="https://pid.cz/en/tickets-and-fare/" target="_blank" rel="noreferrer">Prague PID ticket prices</a></li>
+              <li><a href="https://www.prg.aero/en/public-transport-buses" target="_blank" rel="noreferrer">PRG airport public transport</a></li>
+              <li><a href="https://www.sziklakorhaz.eu/en/information" target="_blank" rel="noreferrer">Hospital in the Rock opening hours</a></li>
+              <li><a href="https://www.sziklakorhaz.eu/en/prices" target="_blank" rel="noreferrer">Hospital in the Rock prices</a></li>
+              <li><a href="https://www.belvedere.at/en/visit" target="_blank" rel="noreferrer">Belvedere visit and tickets</a></li>
+              <li><a href="https://www.onb.ac.at/en/museums/state-hall" target="_blank" rel="noreferrer">Austrian National Library State Hall</a></li>
+              <li><a href="https://www.karlskirche.at/besucherinfos/" target="_blank" rel="noreferrer">Karlskirche visitor info</a></li>
+              <li><a href="https://www.hrad.cz/en/prague-castle-for-visitors/opening-hours" target="_blank" rel="noreferrer">Prague Castle opening hours</a></li>
+              <li><a href="https://www.jewishmuseum.cz/en/info/visit/opening-hours/" target="_blank" rel="noreferrer">Jewish Museum Prague opening hours</a></li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <h3>内容可信度说明</h3>
+            <ul>
+              <li>景点营业时间和门票只采用官方页面能确认的内容。</li>
+              <li>B站视频没有公开字幕的部分, 只提取标题、简介、评论或画面中可确认的信息。</li>
+              <li>餐厅和咖啡馆为路线备选, 不代表已确认2026年10月营业。</li>
+              <li>Google路线链接用于方位和串联, 当天仍以实时导航和公共交通为准。</li>
+              <li>交互地图使用Leaflet和OpenStreetMap底图, 不调用Google Maps私有API。</li>
+              <li>酒店、旅拍和电影图片来自官方页面、公开媒体页面、Wikimedia或可公开访问图源, 仅作个人旅行手札参考。</li>
+              <li>电影评分为公开评分的旅行参考值, 平台分数会随时间变化。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">Central Europe Travel Journal / prepared July 2026 / retro editorial guide</div>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const routeAtlas = {
+      budapest: {
+        center: [47.4979, 19.0402],
+        zoom: 13,
+        days: [
+          {
+            label: "DAY 1 / 10.02",
+            title: "抵达后的佩斯夜景线",
+            note: "抵达日不进重景点, 先用河岸和夜景建立城市感。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=St.%20Stephen%27s%20Basilica%2C%20Budapest&destination=Buda%20Castle%2C%20Budapest&waypoints=Liberty%20Square%2C%20Budapest%7CHungarian%20Parliament%20Building%2C%20Budapest%7CShoes%20on%20the%20Danube%20Bank%2C%20Budapest%7CChain%20Bridge%2C%20Budapest&travelmode=walking",
+            stops: [
+              ["圣伊什特万圣殿", 47.5008, 19.0538],
+              ["Liberty Square", 47.5039, 19.0505],
+              ["匈牙利国会大厦", 47.5070, 19.0456],
+              ["多瑙河鞋履纪念碑", 47.5033, 19.0448],
+              ["链子桥", 47.4989, 19.0437],
+              ["布达城堡", 47.4962, 19.0396]
+            ]
+          },
+          {
+            label: "DAY 2 / 10.03",
+            title: "中央市场与自由桥",
+            note: "早上市场, 午后桥与温泉, 是最顺的一条布达佩斯慢线。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=Central%20Market%20Hall%2C%20Budapest&destination=Rudas%20Baths%2C%20Budapest&waypoints=Liberty%20Bridge%2C%20Budapest%7CGellert%20Hill%20Cave%2C%20Budapest%7CBartok%20Bela%20ut%2C%20Budapest&travelmode=walking",
+            stops: [
+              ["中央市场", 47.4870, 19.0586],
+              ["自由桥", 47.4868, 19.0526],
+              ["Gellert Cave Church", 47.4865, 19.0519],
+              ["Bartok Bela Boulevard", 47.4817, 19.0533],
+              ["Rudas Baths", 47.4895, 19.0477]
+            ]
+          }
+        ]
+      },
+      vienna: {
+        center: [48.2049, 16.3698],
+        zoom: 13,
+        days: [
+          {
+            label: "DAY 3 / 10.04",
+            title: "到站后看Klimt",
+            note: "一晚过渡, 从Hbf出发到Belvedere、Karlskirche和内城咖啡馆。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=Wien%20Hbf&destination=St.%20Stephen%27s%20Cathedral%2C%20Vienna&waypoints=Upper%20Belvedere%2C%20Vienna%7CKarlskirche%2C%20Vienna%7CSecession%2C%20Vienna%7CNaschmarkt%2C%20Vienna&travelmode=transit",
+            stops: [
+              ["Wien Hbf", 48.1850, 16.3760],
+              ["Upper Belvedere", 48.1916, 16.3809],
+              ["Karlskirche", 48.1988, 16.3716],
+              ["Secession", 48.2006, 16.3659],
+              ["Naschmarkt", 48.1986, 16.3619],
+              ["St. Stephen's Cathedral", 48.2085, 16.3731]
+            ]
+          }
+        ]
+      },
+      lake: {
+        center: [47.7666, 13.3676],
+        zoom: 11,
+        days: [
+          {
+            label: "DAY 4 / 10.05",
+            title: "进湖区, 先看湖面",
+            note: "从维也纳经Salzburg进St. Gilgen或Fuschl, 抵达日只走湖边。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=Salzburg%20Hbf&destination=St.%20Gilgen&waypoints=Fuschl%20am%20See%7CWolfgangsee&travelmode=transit",
+            stops: [
+              ["Salzburg Hbf", 47.8127, 13.0459],
+              ["Fuschl am See", 47.7965, 13.3021],
+              ["St. Gilgen", 47.7666, 13.3676],
+              ["Wolfgangsee Lakefront", 47.7692, 13.3650],
+              ["Mozartplatz St. Gilgen", 47.7678, 13.3649]
+            ]
+          },
+          {
+            label: "DAY 5 / 10.06",
+            title: "Wolfgangsee自然线",
+            note: "避开Hallstatt, 用一座山和一段湖岸完成湖区最舒服的一天。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=St.%20Gilgen&destination=Strobl&waypoints=Zwolferhorn%7CSt.%20Wolfgang%20im%20Salzkammergut%7CWolfgangsee&travelmode=transit",
+            stops: [
+              ["St. Gilgen", 47.7666, 13.3676],
+              ["Zwolferhorn Cable Car", 47.7661, 13.3644],
+              ["St. Wolfgang", 47.7392, 13.4488],
+              ["Wolfgangsee Ferry", 47.7398, 13.4494],
+              ["Strobl", 47.7160, 13.4834],
+              ["Fuschlsee", 47.7979, 13.2845]
+            ]
+          }
+        ]
+      },
+      prague: {
+        center: [50.0875, 14.4213],
+        zoom: 13,
+        days: [
+          {
+            label: "DAY 6 / 10.07",
+            title: "经Salzburg抵达老城",
+            note: "湖区回Salzburg后转布拉格, 抵达日只走旧城和查理大桥。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=Praha%20hl.n.&destination=Kampa%20Island%2C%20Prague&waypoints=Municipal%20House%2C%20Prague%7CPowder%20Tower%2C%20Prague%7COld%20Town%20Square%2C%20Prague%7CCharles%20Bridge%2C%20Prague&travelmode=walking",
+            stops: [
+              ["Praha hl.n.", 50.0833, 14.4350],
+              ["Municipal House", 50.0876, 14.4281],
+              ["Powder Tower", 50.0873, 14.4278],
+              ["Old Town Square", 50.0875, 14.4213],
+              ["Charles Bridge", 50.0865, 14.4114],
+              ["Kampa Island", 50.0847, 14.4075]
+            ]
+          },
+          {
+            label: "DAY 7 / 10.08",
+            title: "查理大桥清晨, 城堡半日",
+            note: "清晨拍桥, 上午进城堡区, 下午按天气切约瑟夫城或Letna。",
+            google: "https://www.google.com/maps/dir/?api=1&origin=Charles%20Bridge%2C%20Prague&destination=Letna%20Metronome%2C%20Prague&waypoints=Prague%20Castle%2C%20Prague%7CSt.%20Vitus%20Cathedral%2C%20Prague%7CGolden%20Lane%2C%20Prague%7COld%20Jewish%20Cemetery%2C%20Prague%7CSpanish%20Synagogue%2C%20Prague&travelmode=walking",
+            stops: [
+              ["Charles Bridge", 50.0865, 14.4114],
+              ["Prague Castle", 50.0909, 14.4005],
+              ["St. Vitus Cathedral", 50.0909, 14.4009],
+              ["Golden Lane", 50.0913, 14.4043],
+              ["Old Jewish Cemetery", 50.0897, 14.4180],
+              ["Spanish Synagogue", 50.0906, 14.4210],
+              ["Letna Metronome", 50.0967, 14.4213]
+            ]
+          }
+        ]
+      }
+    };
+
+    function buildMapsLink(name, lat, lng) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${lat},${lng}`)}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const mapNode = document.getElementById("live-map");
+      const mapTabs = document.querySelector(".map-tabs");
+      const cityButtons = Array.from(document.querySelectorAll(".map-tab"));
+      const dayTabs = document.querySelector(".day-tabs");
+      const titleNode = document.getElementById("map-route-title");
+      const noteNode = document.getElementById("map-route-note");
+      const stopList = document.getElementById("map-stop-list");
+      const googleLink = document.getElementById("map-google-link");
+
+      let activeCity = "budapest";
+      let activeDay = 0;
+      let map = null;
+      let lineLayer = null;
+      let markerLayer = null;
+
+      if (window.L) {
+        map = L.map("live-map", {
+          scrollWheelZoom: false,
+          zoomControl: true
+        });
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        markerLayer = L.layerGroup().addTo(map);
+      } else {
+        mapNode.innerHTML = "<div style=\"padding:24px;color:#51483c;line-height:1.8;\">地图底图暂时没有加载成功, 但右侧城市、日期和景点清单仍可正常切换。请使用 Open Google Route 查看当天实时路线。</div>";
+      }
+
+      function getCity() {
+        return routeAtlas[activeCity] || routeAtlas.budapest;
+      }
+
+      function getDay() {
+        const city = getCity();
+        if (activeDay >= city.days.length) {
+          activeDay = 0;
+        }
+        return city.days[activeDay] || city.days[0];
+      }
+
+      function renderDayTabs(cityKey) {
+        const city = routeAtlas[cityKey] || routeAtlas.budapest;
+        dayTabs.innerHTML = city.days.map((day, index) => (
+          `<button class="day-tab${index === activeDay ? " is-active" : ""}" type="button" data-day-index="${index}" aria-pressed="${index === activeDay}">${day.label}</button>`
+        )).join("");
+      }
+
+      function renderStaticPanel(day) {
+        titleNode.textContent = day.title;
+        noteNode.textContent = day.note;
+        googleLink.href = day.google;
+        stopList.innerHTML = day.stops.map((stop, index) => (
+          `<li><b>${String(index + 1).padStart(2, "0")}</b><span>${stop[0]}</span></li>`
+        )).join("");
+      }
+
+      function renderActiveStates() {
+        cityButtons.forEach((button) => {
+          const isActive = button.dataset.city === activeCity;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+
+        Array.from(dayTabs.querySelectorAll(".day-tab")).forEach((button, index) => {
+          const isActive = index === activeDay;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+      }
+
+      function renderMap(city, day) {
+        if (!map || !markerLayer) {
+          return;
+        }
+
+        const points = day.stops.map((stop) => [stop[1], stop[2]]);
+
+        if (lineLayer) {
+          map.removeLayer(lineLayer);
+        }
+        markerLayer.clearLayers();
+
+        lineLayer = L.polyline(points, {
+          color: "#536244",
+          weight: 4,
+          opacity: 0.86
+        }).addTo(map);
+
+        day.stops.forEach((stop, index) => {
+          const marker = L.circleMarker([stop[1], stop[2]], {
+            radius: 8,
+            color: "#536244",
+            weight: 2,
+            fillColor: "#f5efe3",
+            fillOpacity: 1
+          });
+          marker.bindPopup(`<div class="map-popup-title">${String(index + 1).padStart(2, "0")} ${stop[0]}</div><a class="button-link" href="${buildMapsLink(stop[0], stop[1], stop[2])}" target="_blank" rel="noreferrer">Open Map</a>`);
+          markerLayer.addLayer(marker);
+        });
+
+        requestAnimationFrame(() => {
+          map.invalidateSize();
+          try {
+            map.fitBounds(lineLayer.getBounds(), { padding: [42, 42], maxZoom: 15 });
+          } catch (error) {
+            map.setView(city.center, city.zoom);
+          }
+        });
+      }
+
+      function renderRoute() {
+        const city = getCity();
+        const day = getDay();
+        renderStaticPanel(day);
+        renderActiveStates();
+        renderMap(city, day);
+      }
+
+      mapTabs.addEventListener("click", (event) => {
+        const button = event.target.closest(".map-tab");
+        if (!button || !routeAtlas[button.dataset.city]) {
+          return;
+        }
+        activeCity = button.dataset.city;
+        activeDay = 0;
+        renderDayTabs(activeCity);
+        renderRoute();
+      });
+
+      dayTabs.addEventListener("click", (event) => {
+        const button = event.target.closest(".day-tab");
+        if (!button) {
+          return;
+        }
+        activeDay = Number(button.dataset.dayIndex) || 0;
+        renderRoute();
+      });
+
+      renderDayTabs(activeCity);
+      renderRoute();
+    });
+  </script>
+</body>
+</html>

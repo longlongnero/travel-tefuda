@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200">
+  <defs>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="41"/>
+      <feColorMatrix type="saturate" values=".18"/>
+      <feBlend in="SourceGraphic" mode="multiply"/>
+    </filter>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8fb5b8" offset="0"/>
+      <stop stop-color="#b8cfc8" offset="1"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="#efe5d0"/>
+  <g filter="url(#paper)" opacity=".94">
+    <path d="M98 170 C270 70 478 74 654 150 C772 203 833 306 800 405 C765 515 615 523 516 591 C404 668 403 808 292 858 C190 904 87 826 78 712 C68 596 171 522 176 414 C181 316 28 264 98 170Z" fill="#d9c8a8"/>
+    <path d="M217 344 C316 224 468 204 575 275 C673 340 684 477 590 554 C507 621 373 615 292 688 C218 754 177 873 82 860 C24 852 12 771 60 697 C125 596 117 465 217 344Z" fill="url(#water)" stroke="#405d5a" stroke-width="5"/>
+    <path d="M627 184 C725 150 813 189 850 265 C889 346 837 427 758 421 C681 415 634 353 589 305 C543 256 550 211 627 184Z" fill="#cadccf" stroke="#405d5a" stroke-width="4"/>
+    <path d="M533 710 C641 650 766 687 817 781 C872 883 810 1019 689 1042 C587 1061 496 989 477 892 C461 808 464 748 533 710Z" fill="#a8c5c3" stroke="#405d5a" stroke-width="5"/>
+    <path d="M120 1004 C220 946 308 957 375 1018 C434 1071 398 1146 314 1157 C230 1168 132 1114 120 1004Z" fill="#b7d1ca" stroke="#405d5a" stroke-width="4"/>
+    <path d="M118 436 C222 384 319 350 432 361 C559 372 682 416 801 472" fill="none" stroke="#7c6a52" stroke-width="9" stroke-linecap="round" stroke-dasharray="2 22"/>
+    <path d="M630 198 C590 302 523 381 439 468 C352 558 276 648 238 786" fill="none" stroke="#7c6a52" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 18"/>
+    <g fill="#314843" font-family="Georgia,serif" font-size="34">
+      <text x="135" y="310">FUSCHLSEE</text>
+      <text x="384" y="544">WOLFGANGSEE</text>
+      <text x="560" y="690">ST. GILGEN</text>
+      <text x="590" y="1082">STROBL</text>
+      <text x="125" y="938">BAD ISCHL</text>
+    </g>
+    <g fill="#6f3d2b">
+      <circle cx="575" cy="690" r="13"/>
+      <circle cx="516" cy="598" r="13"/>
+      <circle cx="309" cy="712" r="13"/>
+      <circle cx="197" cy="860" r="13"/>
+      <circle cx="705" cy="967" r="13"/>
+    </g>
+    <path d="M60 62 H840 V1138 H60Z" fill="none" stroke="#314843" stroke-width="7"/>
+    <path d="M88 90 H812 V1110 H88Z" fill="none" stroke="#8f7650" stroke-width="2"/>
+  </g>
+</svg>
