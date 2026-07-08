@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公网部署手册 | Public Launch Guide</title>
+  <style>
+    :root {
+      --bg: #050506;
+      --panel: #151517;
+      --panel-2: #101113;
+      --ink: #f4f4f0;
+      --muted: #7f838b;
+      --line: rgba(255, 255, 255, 0.1);
+      --line-strong: rgba(255, 255, 255, 0.2);
+      --hot: #ff3366;
+      --blue: #55a7ff;
+      --green: #78e0a6;
+      --warn: #ffd166;
+      --mono: "SFMono-Regular", "Menlo", "Consolas", monospace;
+      --sans: "Avenir Next", "Inter", "Helvetica Neue", Arial, "PingFang SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.075) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+        var(--bg);
+      background-size: 25vw 100%, 100% 180px, auto;
+      font-family: var(--sans);
+      line-height: 1.45;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 80% 10%, rgba(255, 51, 102, 0.1), transparent 26%),
+        linear-gradient(rgba(255,255,255,0.025), transparent 22%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      padding: 28px clamp(18px, 3vw, 42px) 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 44px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .mark::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      background:
+        linear-gradient(45deg, var(--ink) 0 48%, transparent 48% 100%),
+        linear-gradient(135deg, var(--ink) 0 48%, transparent 48% 100%);
+      background-size: 9px 9px;
+      background-repeat: no-repeat;
+      background-position: left top, right bottom;
+      border: 1px solid var(--line-strong);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill, .lang button {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.035);
+      color: var(--muted);
+      min-height: 34px;
+      padding: 0 12px;
+      font: 700 11px/1 var(--mono);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .lang {
+      display: inline-flex;
+      border: 1px solid var(--line);
+    }
+
+    .lang button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .lang button.active {
+      background: var(--hot);
+      color: #060607;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(300px, 0.92fr);
+      gap: 1px;
+      min-height: 620px;
+      margin-top: 36px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .hero-main, .hero-side {
+      background: rgba(5,5,6,0.94);
+      padding: clamp(24px, 3.4vw, 48px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .kicker {
+      display: inline-block;
+      color: var(--hot);
+      background: var(--hot);
+      color: #09090a;
+      padding: 2px 6px;
+      font: 900 11px/1 var(--mono);
+      text-transform: uppercase;
+      width: max-content;
+    }
+
+    h1 {
+      max-width: 960px;
+      margin: 0;
+      font-size: clamp(54px, 9.5vw, 156px);
+      line-height: 0.86;
+      letter-spacing: -0.055em;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(244,244,240,0.35);
+      text-stroke: 1px rgba(244,244,240,0.35);
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      color: #c4c6ca;
+      font-size: clamp(17px, 1.7vw, 24px);
+    }
+
+    .hero-copy strong { color: var(--ink); font-weight: 700; }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .status-strip div {
+      min-height: 74px;
+      padding: 18px 16px;
+      border-right: 1px solid var(--line);
+    }
+
+    .status-strip div:last-child { border-right: 0; }
+    .status-strip b { display: block; color: var(--ink); margin-top: 4px; }
+
+    .play {
+      position: absolute;
+      top: 24%;
+      right: 20%;
+      width: clamp(86px, 10vw, 138px);
+      aspect-ratio: 1.4;
+      background: var(--hot);
+      display: grid;
+      place-items: center;
+    }
+
+    .play::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 17px solid transparent;
+      border-bottom: 17px solid transparent;
+      border-left: 24px solid #050506;
+      transform: translateX(3px);
+    }
+
+    .mini-map {
+      position: absolute;
+      inset: auto 34px 36px 34px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      padding: 18px;
+    }
+
+    .mini-map h2 {
+      margin: 0 0 18px;
+      font: 800 13px/1 var(--mono);
+      color: var(--hot);
+      text-transform: uppercase;
+    }
+
+    .mini-map ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-map li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: center;
+      color: #d8d9da;
+      font-weight: 650;
+    }
+
+    .mini-map em {
+      font-style: normal;
+      color: var(--hot);
+      font-family: var(--mono);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 76px 0 22px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(36px, 5vw, 86px);
+      line-height: 0.9;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+    }
+
+    .section-title p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--line);
+      gap: 1px;
+    }
+
+    .step {
+      background: var(--panel);
+      min-height: 650px;
+      padding: clamp(22px, 3vw, 38px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .step.dark { background: #09090a; }
+
+    .step-no {
+      font: 900 clamp(28px, 4vw, 48px)/1 var(--mono);
+      letter-spacing: -0.08em;
+    }
+
+    .step-no::after { content: "."; color: var(--hot); }
+
+    .step h3 {
+      margin: 18px 0 12px;
+      max-width: 560px;
+      font-size: clamp(30px, 3.2vw, 54px);
+      line-height: 0.96;
+      font-weight: 560;
+      letter-spacing: -0.035em;
+    }
+
+    .step p {
+      margin: 0;
+      color: #c8c9cb;
+      font-size: 16px;
+      max-width: 620px;
+    }
+
+    .mock {
+      border: 1px solid var(--line-strong);
+      background: #0d0e10;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.55);
+      min-height: 285px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mock::before {
+      content: attr(data-label);
+      display: block;
+      height: 34px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      padding: 10px 14px;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #111215;
+    }
+
+    .browser-bar {
+      height: 42px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+    }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--hot); opacity: 0.75; }
+    .dot:nth-child(2) { background: var(--warn); }
+    .dot:nth-child(3) { background: var(--green); }
+    .url {
+      flex: 1;
+      height: 20px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 4px 8px;
+      font: 700 9px/1 var(--mono);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .mock-body { padding: 18px; }
+
+    .cloud-shell {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 14px;
+    }
+
+    .side-lines, .content-lines { display: grid; gap: 10px; }
+    .side-lines i, .content-lines i, .field i {
+      display: block;
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+    }
+    .side-lines i:nth-child(2), .content-lines i:nth-child(3) { width: 68%; }
+    .side-lines i:nth-child(4), .content-lines i:nth-child(4) { width: 82%; }
+
+    .form {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      border: 1px solid var(--line);
+      padding: 12px;
+      color: var(--muted);
+      font: 800 10px/1 var(--mono);
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin-top: 8px;
+      color: var(--ink);
+      font: 800 14px/1.2 var(--mono);
+    }
+
+    .cta {
+      width: max-content;
+      background: var(--hot);
+      color: #050506;
+      padding: 10px 14px;
+      font: 900 11px/1 var(--mono);
+      text-transform: uppercase;
+    }
+
+    .dns-table {
+      display: grid;
+      border: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .dns-row {
+      display: grid;
+      grid-template-columns: 0.65fr 0.8fr 1.6fr;
+      border-bottom: 1px solid var(--line);
+      min-height: 42px;
+      align-items: center;
+    }
+
+    .dns-row:last-child { border-bottom: 0; }
+    .dns-row span { padding: 10px; border-right: 1px solid var(--line); color: #d9d9d6; }
+    .dns-row span:last-child { border-right: 0; color: var(--blue); }
+    .dns-row.head span { color: var(--muted); text-transform: uppercase; }
+
+    .ns-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .ns {
+      border: 1px solid var(--line);
+      padding: 13px;
+      color: var(--blue);
+      font: 800 13px/1 var(--mono);
+      background: rgba(85,167,255,0.07);
+    }
+
+    .timeline {
+      position: relative;
+      min-height: 230px;
+      padding: 20px 0;
+    }
+
+    .rail {
+      position: absolute;
+      left: 22px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: rgba(85,167,255,0.45);
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .pin {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--blue);
+      background: #111215;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font: 900 12px/1 var(--mono);
+      z-index: 1;
+    }
+
+    .route-card {
+      border: 1px solid var(--line);
+      padding: 12px;
+      color: #d8d9da;
+      font-size: 13px;
+    }
+
+    .check {
+      display: grid;
+      gap: 12px;
+    }
+
+    .check-row {
+      border: 1px solid var(--line);
+      min-height: 48px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      align-items: center;
+      font: 800 12px/1.25 var(--mono);
+      color: #dedfdf;
+    }
+
+    .check-row b {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      color: var(--green);
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--line);
+      gap: 1px;
+      margin-top: 1px;
+    }
+
+    .note {
+      min-height: 190px;
+      background: #080809;
+      padding: 22px;
+    }
+
+    .note b {
+      display: block;
+      color: var(--hot);
+      font: 900 12px/1 var(--mono);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .note p {
+      margin: 0;
+      color: #c7c9cc;
+      font-size: 15px;
+    }
+
+    .footer {
+      min-height: 260px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 30px;
+      padding-top: 80px;
+    }
+
+    .footer h2 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(38px, 6vw, 92px);
+      line-height: 0.92;
+      letter-spacing: -0.045em;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .footer h2 span { color: var(--muted); }
+
+    .footer .links {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer a {
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      color: var(--ink);
+      font: 900 11px/1 var(--mono);
+      text-transform: uppercase;
+    }
+
+    [data-lang="en"] .zh, [data-lang="zh"] .en { display: none; }
+
+    @media (max-width: 900px) {
+      body { background-size: 50vw 100%, 100% 150px, auto; }
+      .hero, .grid, .notes, .footer { grid-template-columns: 1fr; }
+      .hero { min-height: 0; }
+      .hero-side { min-height: 390px; }
+      .status-strip { grid-template-columns: 1fr; }
+      .status-strip div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .step { min-height: 0; }
+      .section-title { display: block; }
+      .section-title p { margin-top: 18px; }
+      .topbar { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body data-lang="zh">
+  <div class="page">
+    <header class="topbar">
+      <a class="mark" href="./index.html">TRAVEL TEFUDA</a>
+      <div class="top-actions">
+        <a class="pill zh" href="https://travel-tefuda.pages.dev">当前公网地址</a>
+        <a class="pill en" href="https://travel-tefuda.pages.dev">Current public URL</a>
+        <div class="lang" aria-label="Language switch">
+          <button type="button" class="active" data-set-lang="zh">中文</button>
+          <button type="button" data-set-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero-main">
+        <div>
+          <span class="kicker zh">免费公网部署</span>
+          <span class="kicker en">Free public launch</span>
+          <h1 class="zh"><span>Deploy</span><br>公网网站<br>四步走。</h1>
+          <h1 class="en"><span>Deploy</span><br>Public Site<br>in 4 Steps.</h1>
+        </div>
+        <p class="hero-copy zh">
+          这是一份极简操作图：先让 GitHub 承载代码，再让 Cloudflare Pages 发布网页。如果要使用个人域名，必须先注册域名，再把 DNS 托管到 Cloudflare。
+        </p>
+        <p class="hero-copy en">
+          A compact visual playbook: host the files on GitHub, publish them with Cloudflare Pages, then connect a custom domain after the domain is registered and delegated to Cloudflare DNS.
+        </p>
+        <div class="status-strip">
+          <div class="zh">当前可访问 <b>Pages 免费二级域名</b></div>
+          <div class="zh">个人域名 <b>需先注册购买</b></div>
+          <div class="zh">DNS 托管 <b>Cloudflare Free 可用</b></div>
+          <div class="en">Now live <b>Pages subdomain</b></div>
+          <div class="en">Custom domain <b>registration required</b></div>
+          <div class="en">DNS hosting <b>Cloudflare Free works</b></div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="play" aria-hidden="true"></div>
+        <div class="mini-map">
+          <h2 class="zh">操作路径</h2>
+          <h2 class="en">Launch Path</h2>
+          <ol>
+            <li><em>01.</em><span class="zh">准备代码仓库</span><span class="en">Prepare the repo</span></li>
+            <li><em>02.</em><span class="zh">连接 Cloudflare Pages</span><span class="en">Connect Pages</span></li>
+            <li><em>03.</em><span class="zh">注册域名并托管 DNS</span><span class="en">Register domain and DNS</span></li>
+            <li><em>04.</em><span class="zh">绑定域名并验证 HTTPS</span><span class="en">Attach domain and verify HTTPS</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-title">
+      <h2 class="zh">STEP BY STEP</h2>
+      <h2 class="en">STEP BY STEP</h2>
+      <p class="zh">示意图里的账号、域名和项目名均为 mock 数据。真实操作时把它们替换成你的 GitHub 仓库、Cloudflare 项目和已注册域名。</p>
+      <p class="en">All account names, domains, and project names below are mock data. Replace them with your GitHub repository, Cloudflare project, and registered domain.</p>
+    </section>
+
+    <main class="grid" aria-label="Deployment steps">
+      <article class="step dark" id="step-1">
+        <div>
+          <div class="step-no">01</div>
+          <h3 class="zh">把网页放进 GitHub 仓库</h3>
+          <h3 class="en">Put the site in GitHub</h3>
+          <p class="zh">仓库负责保存网页源文件。以后你本地改完旅行手札，只要推送到主分支，Cloudflare Pages 就能自动重新发布。</p>
+          <p class="en">GitHub stores the site files. After future edits, push to the main branch and Cloudflare Pages can publish the new version automatically.</p>
+        </div>
+        <div class="mock" data-label="Mock Screenshot / GitHub Repository">
+          <div class="browser-bar">
+            <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+            <div class="url">github.com/your-name/your-site</div>
+          </div>
+          <div class="mock-body cloud-shell">
+            <div class="side-lines"><i></i><i></i><i></i><i></i><i></i></div>
+            <div>
+              <div class="content-lines"><i></i><i></i><i></i></div>
+              <div class="form">
+                <div class="field">Repository <div class="value">your-site</div></div>
+                <div class="field">Branch <div class="value">main</div></div>
+                <div class="field">Publish Folder <div class="value">/html-guide</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step" id="step-2">
+        <div>
+          <div class="step-no">02</div>
+          <h3 class="zh">用 Cloudflare Pages 发布</h3>
+          <h3 class="en">Publish with Cloudflare Pages</h3>
+          <p class="zh">在 Cloudflare 里创建 Pages 项目，连接 GitHub 仓库。构建命令可以留空，输出目录填写实际网页目录。</p>
+          <p class="en">Create a Pages project in Cloudflare and connect the GitHub repo. Leave build command empty for a static folder and set the output directory.</p>
+        </div>
+        <div class="mock" data-label="Mock Screenshot / Cloudflare Pages Setup">
+          <div class="browser-bar">
+            <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+            <div class="url">dash.cloudflare.com/pages/new</div>
+          </div>
+          <div class="mock-body">
+            <div class="form">
+              <div class="field">Project Name <div class="value">your-project</div></div>
+              <div class="field">Production Branch <div class="value">main</div></div>
+              <div class="field">Build Command <div class="value">-</div></div>
+              <div class="field">Output Directory <div class="value">path/to/html-guide</div></div>
+              <div class="cta">Save and Deploy</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step" id="step-3">
+        <div>
+          <div class="step-no">03</div>
+          <h3 class="zh">注册域名，交给 Cloudflare DNS</h3>
+          <h3 class="en">Register domain and move DNS</h3>
+          <p class="zh">DNS 不用额外购买，Cloudflare Free 可以托管。但个人域名本身必须先注册。注册后在 Cloudflare 添加站点，选择 Free Plan，再把注册商 nameserver 改成 Cloudflare 给出的两条。</p>
+          <p class="en">Cloudflare DNS is available on the Free plan, but the custom domain itself must be registered first. Add the domain to Cloudflare, choose Free, then replace registrar nameservers with the two Cloudflare nameservers.</p>
+        </div>
+        <div class="mock" data-label="Mock Screenshot / DNS Delegation">
+          <div class="browser-bar">
+            <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+            <div class="url">registrar.example / nameservers</div>
+          </div>
+          <div class="mock-body">
+            <div class="field">Domain <div class="value">example.com</div></div>
+            <div class="ns-list">
+              <div class="ns">alpha.ns.cloudflare.com</div>
+              <div class="ns">beta.ns.cloudflare.com</div>
+            </div>
+            <div class="form">
+              <div class="cta">Replace Nameservers</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step dark" id="step-4">
+        <div>
+          <div class="step-no">04</div>
+          <h3 class="zh">绑定域名并检查公网访问</h3>
+          <h3 class="en">Attach domain and verify access</h3>
+          <p class="zh">等 Cloudflare Zone 激活后，在 Pages 项目里添加自定义域名。DNS 记录指向 Pages 二级域名，最后确认 HTTPS 和移动端访问都正常。</p>
+          <p class="en">After the zone becomes active, add the custom domain in the Pages project. Point DNS records to the Pages subdomain, then verify HTTPS and mobile access.</p>
+        </div>
+        <div class="mock" data-label="Mock Screenshot / DNS Records">
+          <div class="browser-bar">
+            <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+            <div class="url">dash.cloudflare.com/dns/example.com</div>
+          </div>
+          <div class="mock-body">
+            <div class="dns-table">
+              <div class="dns-row head"><span>Type</span><span>Name</span><span>Target</span></div>
+              <div class="dns-row"><span>CNAME</span><span>@</span><span>your-project.pages.dev</span></div>
+              <div class="dns-row"><span>CNAME</span><span>www</span><span>your-project.pages.dev</span></div>
+            </div>
+            <div class="form">
+              <div class="field">Pages Custom Domain <div class="value">example.com</div></div>
+              <div class="cta">HTTPS Active</div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <section class="section-title">
+      <h2 class="zh">验收清单</h2>
+      <h2 class="en">CHECKLIST</h2>
+      <p class="zh">真正上线前只看这四个结果：仓库可更新、Pages 可访问、域名已注册并切到 Cloudflare、HTTPS 正常。</p>
+      <p class="en">Before calling it live, check four outcomes: repo updates work, Pages loads, the domain is registered and delegated, and HTTPS is active.</p>
+    </section>
+
+    <section class="notes">
+      <div class="note">
+        <b>01 / Repo</b>
+        <p class="zh">推送到 main 后会触发 Cloudflare Pages 重新部署。</p>
+        <p class="en">Pushing to main triggers a new Cloudflare Pages deployment.</p>
+      </div>
+      <div class="note">
+        <b>02 / Pages</b>
+        <p class="zh">先用 Pages 免费二级域名确认公网能打开。</p>
+        <p class="en">Use the Pages subdomain first to confirm public access.</p>
+      </div>
+      <div class="note">
+        <b>03 / DNS</b>
+        <p class="zh">如果域名未注册，DNS 记录不会真正生效。</p>
+        <p class="en">If the domain is not registered, DNS records cannot go live.</p>
+      </div>
+      <div class="note">
+        <b>04 / HTTPS</b>
+        <p class="zh">nameserver 生效后再开启并检查 HTTPS。</p>
+        <p class="en">Enable and verify HTTPS after nameservers propagate.</p>
+      </div>
+    </section>
+
+    <section class="footer">
+      <h2 class="zh">先上线，再把域名<br><span>慢慢接好。</span></h2>
+      <h2 class="en">Launch first, then connect<br><span>the custom domain.</span></h2>
+      <div class="links">
+        <a href="./index.html" class="zh">返回手札</a>
+        <a href="./index.html" class="en">Back to guide</a>
+        <a href="#top" class="zh">回到顶部</a>
+        <a href="#top" class="en">Top</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const root = document.body;
+    const buttons = Array.from(document.querySelectorAll("[data-set-lang]"));
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        root.dataset.lang = button.dataset.setLang;
+        buttons.forEach((item) => item.classList.toggle("active", item === button));
+        document.documentElement.lang = button.dataset.setLang === "zh" ? "zh-CN" : "en";
+      });
+    });
+  </script>
+</body>
+</html>

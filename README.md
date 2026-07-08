@@ -11,6 +11,7 @@ Central Europe 2026 travel journal and social card assets.
 ## Structure
 
 - `outputs/central-europe-2026/html-guide/` - deployed static website
+- `outputs/central-europe-2026/html-guide/deploy-guide.html` - bilingual public deployment walkthrough with mock configuration screenshots
 - `outputs/central-europe-2026/social-cards/` - social card source and exported images
 
 ## Update Flow
