@@ -1282,6 +1282,236 @@
       }
     }
 
+    .hotel-rank-grid,
+    .deep-schedule-grid,
+    .watch-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hotel-rank-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hotel-pick,
+    .deep-day,
+    .watch-card {
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 250, 240, 0.72);
+      box-shadow: var(--shadow);
+    }
+
+    .hotel-pick {
+      display: grid;
+      grid-template-columns: minmax(190px, 0.55fr) minmax(0, 1fr);
+      min-height: 310px;
+    }
+
+    .hotel-pick img {
+      width: 100%;
+      height: 100%;
+      min-height: 310px;
+      object-fit: cover;
+      filter: saturate(0.88) contrast(0.96);
+    }
+
+    .hotel-pick-body,
+    .deep-day,
+    .watch-card {
+      padding: clamp(18px, 2.4vw, 28px);
+    }
+
+    .hotel-pick h3,
+    .deep-day h3,
+    .watch-card h3 {
+      margin: 8px 0 12px;
+      font-family: var(--serif);
+      font-size: clamp(28px, 3vw, 44px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hotel-meta,
+    .deep-meta,
+    .watch-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .hotel-meta span,
+    .deep-meta span,
+    .watch-meta span {
+      border: 1px solid var(--line-soft);
+      padding: 4px 8px;
+      background: rgba(245,239,227,0.56);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .hotel-checklist,
+    .watch-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+    }
+
+    .hotel-checklist li,
+    .watch-list li {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .hotel-checklist li::before,
+    .watch-list li::before {
+      content: "OK";
+      border: 1px solid var(--line-soft);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    .deep-schedule-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .deep-day {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deep-day::after {
+      content: attr(data-city);
+      position: absolute;
+      right: 18px;
+      top: 14px;
+      color: rgba(83, 98, 68, 0.12);
+      font-family: var(--mono);
+      font-size: 58px;
+      line-height: 1;
+      pointer-events: none;
+      text-transform: uppercase;
+    }
+
+    .time-plan {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .time-plan li {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .time-plan li:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .time-plan time {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent-ink);
+      padding-top: 2px;
+    }
+
+    .time-plan strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .time-plan span {
+      color: var(--muted);
+    }
+
+    .watch-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .watch-card {
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .watch-card.featured {
+      grid-column: span 2;
+      background:
+        linear-gradient(120deg, rgba(245,239,227,0.9), rgba(255,250,240,0.62)),
+        url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wien_-_Riesenrad%2C_Wiener_Prater.JPG/640px-Wien_-_Riesenrad%2C_Wiener_Prater.JPG");
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: screen;
+    }
+
+    .pretrip-plan {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line-soft);
+      background: var(--line-soft);
+      margin-top: 22px;
+    }
+
+    .pretrip-plan div {
+      background: rgba(255,250,240,0.76);
+      padding: 14px;
+      min-height: 130px;
+    }
+
+    .pretrip-plan b {
+      display: block;
+      font-family: var(--mono);
+      color: var(--accent-ink);
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .pretrip-plan span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .hotel-rank-grid,
+      .deep-schedule-grid,
+      .watch-grid,
+      .pretrip-plan {
+        grid-template-columns: 1fr;
+      }
+
+      .watch-card.featured {
+        grid-column: auto;
+      }
+
+      .hotel-pick {
+        grid-template-columns: 1fr;
+      }
+
+      .hotel-pick img {
+        height: 260px;
+        min-height: 0;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
@@ -1301,7 +1531,10 @@
         <a href="#vienna">维也纳</a>
         <a href="#lake">湖区</a>
         <a href="#prague">布拉格</a>
+        <a href="#hotel-picks">住宿优选</a>
+        <a href="#deep-schedule">精细日程</a>
         <a href="#food">美食</a>
+        <a href="#pretrip">书影音</a>
         <a href="#bili-hotels">住宿附录</a>
         <a href="./deploy-guide.html">部署</a>
       </nav>
@@ -1803,6 +2036,194 @@
       </div>
     </section>
 
+    <section id="hotel-picks" class="shell">
+      <div class="section-title">
+        <h2>住宿优选</h2>
+        <p>按“Hyatt优先、Booking/公开口碑高分、单晚预算尽量不超过2500人民币、第二天行程方便”重新筛选。价格和评分会浮动, 下单前仍以Booking/Hyatt/酒店官网的10月2到9日实际页面为准。</p>
+      </div>
+      <div class="hotel-rank-grid">
+        <article class="hotel-pick">
+          <img src="https://budapest.com/storage/1149/new-york-palace-hotel-budapest.jpg" alt="布达佩斯复古酒店外观">
+          <div class="hotel-pick-body">
+            <div class="rank">Budapest / 10.02-10.04 / Hyatt first</div>
+            <h3>Párisi Udvar Hotel Budapest 或同级复古中心酒店</h3>
+            <p>Hyatt Unbound体系里最贴合手札审美, 位置在Ferenciek tere一带, 去中央市场、自由桥、多瑙河和New York Cafe都顺。若含税价≤2500/晚可优先锁。</p>
+            <div class="hotel-meta"><span>Hyatt first</span><span>central</span><span>retro architecture</span></div>
+            <ul class="hotel-checklist">
+              <li>备选: Hotel Clark、Dorothea、Hotel Oktogon Haggenmacher、Hotel Collect。</li>
+              <li>关键: D1到达日别住太偏, 方便寄存行李和晚上回酒店。</li>
+              <li>筛选条件: Booking公开评分优先9分以上; 若Hyatt超预算, 选高分精品酒店。</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="hotel-pick">
+          <img src="https://www.hyatt.com/content/dam/hyatt/hyattdam/images/2020/03/26/1423/Andaz-Vienna-Am-Belvedere-P001-Exterior.jpg/Andaz-Vienna-Am-Belvedere-P001-Exterior.16x9.jpg" alt="Andaz Vienna Am Belvedere外观">
+          <div class="hotel-pick-body">
+            <div class="rank">Vienna / 10.04-10.05 / train friendly</div>
+            <h3>Andaz Vienna Am Belvedere</h3>
+            <p>只住1晚, 交通效率比“住得最古典”更重要。Andaz靠近Wien Hbf和Belvedere, D3下午看Klimt、D4早上去Salzburg都省力。</p>
+            <div class="hotel-meta"><span>Hyatt</span><span>Hbf friendly</span><span>Belvedere</span></div>
+            <ul class="hotel-checklist">
+              <li>备选: Hotel Kaiserhof、Hotel Beethoven Wien、Das Tyrol。</li>
+              <li>Park Hyatt Vienna位置更美, 但多数日期会超过预算, 适合积分或特价再看。</li>
+              <li>关键: 不建议为了老城核心多拖行李, D4要早出发去湖区。</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="hotel-pick">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/St_Gilgen_am_Wolfgangsee.jpg/640px-St_Gilgen_am_Wolfgangsee.jpg" alt="St. Gilgen湖区风景">
+          <div class="hotel-pick-body">
+            <div class="rank">Lake District / 10.05-10.07 / no Hallstatt</div>
+            <h3>St. Gilgen / Fuschlsee 湖区基地</h3>
+            <p>湖区不硬找Hyatt。优先St. Gilgen或Fuschl, 接Salzburg 150路巴士顺, 更接近你们想要的人少、自然、湖边慢行。</p>
+            <div class="hotel-meta"><span>2 nights</span><span>lake base</span><span>bus 150</span></div>
+            <ul class="hotel-checklist">
+              <li>优先看: Hotel Hollweger、湖边Gasthof、Fuschlsee高分家庭酒店。</li>
+              <li>如果St. Gilgen/Fuschl价格不稳, 查St. Wolfgang或Abersee, 但不要住Hallstatt。</li>
+              <li>关键: D5要能方便去Zwölferhorn、St. Wolfgang、Strobl或雨天Bad Ischl。</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="hotel-pick">
+          <img src="https://www.americanexpress.com/en-us/travel/discover/photos/482797/87709/1600/hotel-exteriors.jpg?ch=560" alt="布拉格酒店外观">
+          <div class="hotel-pick-body">
+            <div class="rank">Prague / 10.07-10.09 / final two nights</div>
+            <h3>The Julius Prague / BoHo Prague</h3>
+            <p>最后两晚优先住老城东侧或火车站到老城之间。Andaz Prague很好但常超预算; Lindner Prague Castle偏城堡区, 去机场和火车站不如东侧顺。</p>
+            <div class="hotel-meta"><span>old town edge</span><span>station friendly</span><span>airport day</span></div>
+            <ul class="hotel-checklist">
+              <li>备选: Hotel Residence Agnes、Unitas Hotel、Andaz Prague特价。</li>
+              <li>关键: D6晚到不折腾, D8退房去机场要稳。</li>
+              <li>筛选条件: Booking评分9以上优先, 预算超出时先保位置再保品牌。</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="deep-schedule" class="shell">
+      <div class="section-title">
+        <h2>每日精细日程</h2>
+        <p>这里是执行版: 精确到起床、早餐、移动、午餐、下午主线、晚餐和夜间安排。每一天只保留一条主线, 避免变成特种兵旅行。</p>
+      </div>
+      <div class="deep-schedule-grid">
+        <article class="deep-day" data-city="Budapest">
+          <div class="deep-meta"><span>DAY 1</span><span>10.02 Fri</span><span>arrival</span></div>
+          <h3>抵达后先看多瑙河夜景</h3>
+          <ul class="time-plan">
+            <li><time>08:00</time><span><strong>到达布达佩斯</strong>机场100E或打车进城, 先寄存行李。</span></li>
+            <li><time>10:00</time><span><strong>早餐/早午餐</strong>Espresso Embassy 或 Gerlóczy Café, 轻吃恢复体力。</span></li>
+            <li><time>11:15</time><span><strong>佩斯主线</strong>圣伊什特万圣殿 - Liberty Square - 国会大厦外观。</span></li>
+            <li><time>13:00</time><span><strong>午餐</strong>Hungarikum Bistro需提前订; 备选Retek Bisztró。</span></li>
+            <li><time>15:00</time><span><strong>入住休息</strong>不排博物馆, 给长途飞行留缓冲。</span></li>
+            <li><time>17:00</time><span><strong>河岸夜景</strong>电车2号线、鞋履纪念碑、链子桥。</span></li>
+            <li><time>19:00</time><span><strong>晚餐</strong>Gettó Gulyás 或 Menza, 之后上渔人堡看夜景。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Budapest">
+          <div class="deep-meta"><span>DAY 2</span><span>10.03 Sat</span><span>market + bath</span></div>
+          <h3>中央市场、自由桥与温泉</h3>
+          <ul class="time-plan">
+            <li><time>07:30</time><span><strong>起床</strong>今天是恢复线, 早起但不赶。</span></li>
+            <li><time>08:30</time><span><strong>早餐</strong>Central Market Hall吃Rétes酥皮卷; 备选Artizán Bakery。</span></li>
+            <li><time>09:45</time><span><strong>市场</strong>中央市场二层短逛, 不把这里拖成半天。</span></li>
+            <li><time>10:45</time><span><strong>city walk</strong>自由桥 - Gellért Cave Church - Bartók Béla Boulevard。</span></li>
+            <li><time>12:30</time><span><strong>午餐</strong>Hadik / Kelet Café, 或市场二层Fakanal轻吃。</span></li>
+            <li><time>14:00</time><span><strong>温泉</strong>Rudas Baths 2.5小时, 比游客感更重的Széchenyi更贴合这天。</span></li>
+            <li><time>18:30</time><span><strong>晚餐</strong>Rosenstein 或 Stand25 Bistro; 累了就住处附近解决。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Vienna">
+          <div class="deep-meta"><span>DAY 3</span><span>10.04 Sun</span><span>Budapest to Vienna</span></div>
+          <h3>上车到维也纳, 先看Klimt</h3>
+          <ul class="time-plan">
+            <li><time>07:00</time><span><strong>起床</strong>酒店早餐或Espresso Embassy快速咖啡。</span></li>
+            <li><time>08:30</time><span><strong>去车站</strong>Budapest-Keleti, 预留安检和找站台时间。</span></li>
+            <li><time>09:30</time><span><strong>跨城交通</strong>MÁV/ÖBB到Wien Hbf, 约2小时40分。</span></li>
+            <li><time>13:00</time><span><strong>抵达午餐</strong>Hbf附近简餐, 入住或寄存行李。</span></li>
+            <li><time>14:30</time><span><strong>Belvedere</strong>Upper Belvedere看Klimt, 只抓核心展厅。</span></li>
+            <li><time>16:30</time><span><strong>建筑线</strong>Karlskirche - Secession外观。</span></li>
+            <li><time>17:30</time><span><strong>咖啡</strong>Vollpension、Café Sperl或Cafe Central早晚错峰。</span></li>
+            <li><time>19:30</time><span><strong>晚餐</strong>Glacis Beisl / Lugeck / Figlmüller, 夜走Graben。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Lake">
+          <div class="deep-meta"><span>DAY 4</span><span>10.05 Mon</span><span>Vienna to lakes</span></div>
+          <h3>进湖区, 抵达日只看湖面</h3>
+          <ul class="time-plan">
+            <li><time>07:00</time><span><strong>起床</strong>不排维也纳新景点, 直接向西。</span></li>
+            <li><time>09:00</time><span><strong>火车</strong>Wien Hbf - Salzburg Hbf, ÖBB为主。</span></li>
+            <li><time>12:00</time><span><strong>换乘</strong>Salzburg Hbf坐150路去Fuschl或St. Gilgen。</span></li>
+            <li><time>13:30</time><span><strong>抵达湖区</strong>入住或寄存, 先不要跨湖追景点。</span></li>
+            <li><time>14:30</time><span><strong>午餐/下午茶</strong>Café Dallmann, 老街和码头顺路。</span></li>
+            <li><time>16:00</time><span><strong>湖畔慢走</strong>St. Gilgen湖边、码头、Mozartplatz。</span></li>
+            <li><time>18:30</time><span><strong>晚餐</strong>Gasthof zur Post / Wirt am Gries, 晚上只散步。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Lake">
+          <div class="deep-meta"><span>DAY 5</span><span>10.06 Tue</span><span>Wolfgangsee</span></div>
+          <h3>一座山和一段湖岸</h3>
+          <ul class="time-plan">
+            <li><time>07:00</time><span><strong>起床</strong>酒店早餐, 先看天气决定山线。</span></li>
+            <li><time>08:30</time><span><strong>晴天主线</strong>Zwölferhorn缆车; 想经典视野则选Schafbergbahn。</span></li>
+            <li><time>11:30</time><span><strong>回湖边</strong>下山后不赶第二座山。</span></li>
+            <li><time>12:30</time><span><strong>午餐</strong>St. Wolfgang湖边餐厅, 看预算选Weißes Rössl一带。</span></li>
+            <li><time>14:00</time><span><strong>湖区慢线</strong>Wolfgangsee船或湖岸步道, St. Wolfgang到Strobl。</span></li>
+            <li><time>16:30</time><span><strong>咖啡</strong>回St. Gilgen或Strobl湖边休息。</span></li>
+            <li><time>18:30</time><span><strong>晚餐</strong>住宿小镇解决, 减少夜间巴士不确定性。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 6</span><span>10.07 Wed</span><span>Lake to Prague</span></div>
+          <h3>经Salzburg转去布拉格</h3>
+          <ul class="time-plan">
+            <li><time>06:45</time><span><strong>起床</strong>酒店早餐, 提前整理行李。</span></li>
+            <li><time>08:00</time><span><strong>巴士</strong>150路回Salzburg Hbf。</span></li>
+            <li><time>09:15</time><span><strong>Salzburg轻走</strong>Mirabell Garden和老城外观, 不进重景点。</span></li>
+            <li><time>11:30</time><span><strong>午餐</strong>Café Tomaselli或Afro Café, 控制时间。</span></li>
+            <li><time>12:30</time><span><strong>跨国交通</strong>ÖBB/CD经Linz或Wien转Prague; RegioJet作备选。</span></li>
+            <li><time>19:00</time><span><strong>抵达入住</strong>住老城东侧或火车站附近最稳。</span></li>
+            <li><time>20:00</time><span><strong>晚餐</strong>Lokál Dlouhááá / Kantýna, 夜走Old Town Square。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 7</span><span>10.08 Thu</span><span>castle + Letna</span></div>
+          <h3>查理大桥清晨和城堡半日</h3>
+          <ul class="time-plan">
+            <li><time>06:00</time><span><strong>起床</strong>日出前后到Charles Bridge, 只拍20到30分钟。</span></li>
+            <li><time>08:00</time><span><strong>早餐</strong>Café Savoy建议预约; 备选Café Louvre。</span></li>
+            <li><time>09:30</time><span><strong>城堡区</strong>Prague Castle、St. Vitus Cathedral、Golden Lane。</span></li>
+            <li><time>12:30</time><span><strong>午餐</strong>Kuchyň, 视野和动线都好。</span></li>
+            <li><time>14:00</time><span><strong>小城线</strong>Malá Strana - Lennon Wall - Kampa Island。</span></li>
+            <li><time>16:00</time><span><strong>下午二选一</strong>Josefov犹太区或National Museum。</span></li>
+            <li><time>18:00</time><span><strong>夕阳</strong>Letná Park; 晚餐U Kroka或Field/La Degustation高预算版。</span></li>
+          </ul>
+        </article>
+
+        <article class="deep-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 8</span><span>10.09 Fri</span><span>departure</span></div>
+          <h3>早餐后从容去机场</h3>
+          <ul class="time-plan">
+            <li><time>07:30</time><span><strong>起床</strong>不要安排收费景点。</span></li>
+            <li><time>08:30</time><span><strong>早餐</strong>Eska或Café Louvre, 选离酒店近的。</span></li>
+            <li><time>09:45</time><span><strong>补拍</strong>Municipal House、Powder Tower、老城最后一段。</span></li>
+            <li><time>11:00</time><span><strong>取行李</strong>回酒店, 检查退税资料和行李重量。</span></li>
+            <li><time>11:30</time><span><strong>去机场</strong>打车最稳; 公交为Metro A + 59路无轨电车。</span></li>
+            <li><time>12:30</time><span><strong>到机场</strong>给14:00航班留退税和安检余量。</span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
     <section id="food" class="shell">
       <div class="section-title">
         <h2>B站与社媒餐厅咖啡表</h2>
@@ -1995,6 +2416,126 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section id="pretrip" class="shell">
+      <div class="section-title">
+        <h2>出发前书影音</h2>
+        <p>不做大而全清单, 只放真正适合这次路线的书、电影和纪录片。关键词是多瑙河、奥匈帝国、维也纳咖啡馆、布拉格文学和湖区自然。</p>
+      </div>
+      <div class="watch-grid">
+        <article class="watch-card featured">
+          <div>
+            <div class="rank">Book / must read</div>
+            <h3>《多瑙河》Claudio Magris</h3>
+            <p>最接近你想要的“旅行笔记”气质: 不是攻略, 而是沿着河流写欧洲历史、边境、语言和人的旅行文学。适合在布达佩斯和维也纳之前读。</p>
+          </div>
+          <div class="watch-meta"><span>Danube</span><span>travel writing</span><span>humanities</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Book / Vienna</div>
+            <h3>《昨日的世界》</h3>
+            <p>Stefan Zweig写旧维也纳精神世界。读完再去咖啡馆、国家图书馆、Ringstrasse, 会更有“旧欧洲消失前夜”的感觉。</p>
+          </div>
+          <div class="watch-meta"><span>Zweig</span><span>Vienna</span><span>old Europe</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Book / Empire</div>
+            <h3>《拉德茨基进行曲》</h3>
+            <p>Joseph Roth的奥匈帝国小说代表作。适合理解为什么布达佩斯、维也纳、布拉格共享一种帝国遗产和衰落气质。</p>
+          </div>
+          <div class="watch-meta"><span>Austria-Hungary</span><span>novel</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Book / Prague</div>
+            <h3>《过于喧嚣的孤独》</h3>
+            <p>Bohumil Hrabal比Kafka更日常、更好进入。适合布拉格老城、酒馆、二手书店和荒诞感。</p>
+          </div>
+          <div class="watch-meta"><span>Hrabal</span><span>Prague</span><span>literary walk</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Film / Vienna / must watch</div>
+            <h3>Before Sunrise</h3>
+            <p>最贴合你们city walk气质的电影。维也纳街头、唱片店、河岸、咖啡馆都能直接变成行程里的氛围坐标。</p>
+          </div>
+          <ul class="watch-list">
+            <li>推荐打卡: Cafe Sperl、河岸、旧城角落。</li>
+            <li>适合出发前一周晚上看。</li>
+          </ul>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Film / Vienna / classic</div>
+            <h3>The Third Man</h3>
+            <p>黑白战后维也纳、摩天轮、街巷和下水道, 影史经典。适合给维也纳增加一点黑色电影质感。</p>
+          </div>
+          <div class="watch-meta"><span>high score</span><span>Prater</span><span>noir</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Film / Prague + Vienna</div>
+            <h3>Amadeus</h3>
+            <p>布拉格大量取景, 但讲维也纳音乐神话。好看程度高, 也适合把Prague和Vienna的剧场感串起来。</p>
+          </div>
+          <div class="watch-meta"><span>Oscar</span><span>music</span><span>Prague scenes</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Film / Prague</div>
+            <h3>Mission: Impossible</h3>
+            <p>1996版开场布拉格段很经典。不是最人文, 但去查理大桥和老城前看一遍会很有辨识度。</p>
+          </div>
+          <div class="watch-meta"><span>Prague</span><span>Old Town</span><span>easy watch</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Film / visual mood</div>
+            <h3>The Grand Budapest Hotel</h3>
+            <p>不是真实布达佩斯取景, 只作为复古酒店、美术、色彩和手札排版灵感。适合出发前一晚轻松看。</p>
+          </div>
+          <div class="watch-meta"><span>retro</span><span>hotel mood</span><span>visual</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Documentary / practical</div>
+            <h3>Rick Steves' Europe</h3>
+            <p>看Budapest、Vienna、Prague三集即可。短、实用、城市结构清晰, 临行前快速建立方位感。</p>
+          </div>
+          <div class="watch-meta"><span>travel doc</span><span>quick prep</span></div>
+        </article>
+
+        <article class="watch-card">
+          <div>
+            <div class="rank">Documentary / rail mood</div>
+            <h3>Great Continental Railway Journeys</h3>
+            <p>很适合这次火车串联中欧的路线感。节目用老旅行指南走欧洲铁路, 比普通攻略更有旧欧洲气质。</p>
+          </div>
+          <div class="watch-meta"><span>train</span><span>Europe</span><span>route mood</span></div>
+        </article>
+      </div>
+
+      <div class="pretrip-plan">
+        <div><b>DAY -7</b><span>读《多瑙河》前几章, 建立多瑙河和中欧概念。</span></div>
+        <div><b>DAY -6</b><span>看Before Sunrise, 给维也纳city walk定调。</span></div>
+        <div><b>DAY -5</b><span>读《昨日的世界》维也纳相关章节。</span></div>
+        <div><b>DAY -4</b><span>看The Third Man, 补一个黑白维也纳。</span></div>
+        <div><b>DAY -3</b><span>看Rick Steves三城单集, 建立城市结构。</span></div>
+        <div><b>DAY -2</b><span>看Amadeus, 把音乐、剧场和布拉格串起来。</span></div>
+        <div><b>DAY -1</b><span>读Hrabal或看The Grand Budapest Hotel, 轻松进入复古氛围。</span></div>
       </div>
     </section>
 
