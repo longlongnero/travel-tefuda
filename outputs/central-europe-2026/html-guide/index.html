@@ -1382,7 +1382,11 @@
     }
 
     .deep-schedule-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
+    }
+
+    .legacy-schedule {
+      display: none;
     }
 
     .deep-day {
@@ -1444,6 +1448,140 @@
 
     .time-plan span {
       color: var(--muted);
+    }
+
+    .mag-day {
+      grid-column: 1 / -1;
+      padding: clamp(22px, 3vw, 34px);
+    }
+
+    .mag-day .day-lede {
+      max-width: 760px;
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .story-flow {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .story-stop {
+      position: relative;
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 22px;
+      padding: 22px;
+      border: 1px solid var(--line-soft);
+      background:
+        linear-gradient(90deg, rgba(83,98,68,0.055), transparent 42%),
+        rgba(255, 250, 240, 0.68);
+    }
+
+    .story-stop::before {
+      content: "";
+      position: absolute;
+      left: 81px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--line-soft);
+    }
+
+    .story-time {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: start;
+      gap: 6px;
+    }
+
+    .story-time b {
+      width: 74px;
+      height: 74px;
+      border: 1px solid var(--accent);
+      display: grid;
+      place-items: center;
+      color: var(--accent-ink);
+      background: rgba(245,239,227,0.92);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .story-time span {
+      width: 74px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .story-copy {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-copy h4 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .story-copy p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.78;
+    }
+
+    .story-copy .route-next {
+      border-top: 1px solid var(--line-soft);
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .story-copy .route-next b {
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-right: 8px;
+    }
+
+    .day-brief {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line-soft);
+      background: var(--line-soft);
+      margin-top: 18px;
+    }
+
+    .day-brief div {
+      background: rgba(245,239,227,0.72);
+      padding: 14px;
+    }
+
+    .day-brief b {
+      display: block;
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .day-brief span {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .day-table-wrap {
@@ -1570,6 +1708,28 @@
       .hotel-pick img {
         height: 260px;
         min-height: 0;
+      }
+
+      .story-stop {
+        grid-template-columns: 1fr;
+      }
+
+      .story-stop::before {
+        display: none;
+      }
+
+      .story-time {
+        grid-template-columns: 82px minmax(0, 1fr);
+        align-items: center;
+      }
+
+      .story-time span {
+        width: auto;
+        text-align: left;
+      }
+
+      .day-brief {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -2166,6 +2326,201 @@
     </section>
 
     <section id="deep-schedule" class="shell">
+      <div class="section-title">
+        <h2>每日精细日程</h2>
+        <p>这一版改成杂志式长文时间轴。每一天不再用表格, 而是把“几点做什么、停留多久、为什么值得看、下一站怎么走”写成可以直接照着走的旅行专栏。</p>
+      </div>
+
+      <div class="deep-schedule-grid">
+        <article class="deep-day mag-day" data-city="Budapest">
+          <div class="deep-meta"><span>DAY 1</span><span>10.02 Fri</span><span>arrival / Pest night</span></div>
+          <h3>抵达后的第一眼, 留给圣殿和多瑙河</h3>
+          <p class="day-lede">第一天不要急着进博物馆。长途飞行后, 最适合用佩斯侧的开阔广场、国会大厦外观和多瑙河夜景建立城市感。路线从机场进城, 经圣伊什特万圣殿、自由广场、国会大厦和河岸, 晚上再上渔人堡看灯光。</p>
+          <div class="day-brief">
+            <div><b>早餐</b><span>Espresso Embassy醒神, 或Gerlóczy Café进入复古小馆氛围。</span></div>
+            <div><b>主线</b><span>佩斯政治与河岸线: 圣殿 - 自由广场 - 国会 - 鞋履纪念碑 - 链子桥。</span></div>
+            <div><b>节奏</b><span>15:00必须休息, 晚上才有余力看渔人堡夜景。</span></div>
+          </div>
+          <div class="story-flow">
+            <section class="story-stop">
+              <div class="story-time"><b>08:00</b><span>60-90min</span></div>
+              <div class="story-copy">
+                <h4>从BUD机场进城, 先把行李问题解决</h4>
+                <p>100E机场巴士到Deák Ferenc tér最直接, 适合住佩斯核心区; 如果行李多或睡眠不足, 打车更省心。今天的第一目标不是赶景点, 而是把身体从长途飞行里慢慢拉回来。</p>
+                <div class="route-next"><b>串联</b>住佩斯侧就从Deák步行或地铁到酒店; 住布达侧建议直接打车, 不要拖行李换乘。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>10:00</b><span>60min</span></div>
+              <div class="story-copy">
+                <h4>第一杯咖啡: Espresso Embassy 或 Gerlóczy</h4>
+                <p>Espresso Embassy偏精品咖啡, 适合快速醒神; Gerlóczy更像老欧洲小旅馆餐厅, 木椅、窗边和街角气质会更贴合手札。早餐不用吃太满, 午餐还要留给匈牙利菜。</p>
+                <div class="route-next"><b>串联</b>两家都在佩斯核心, 步行10到15分钟可到圣伊什特万圣殿。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>11:15</b><span>40min</span></div>
+              <div class="story-copy">
+                <h4>圣伊什特万圣殿, 从国家身份开始看布达佩斯</h4>
+                <p>这里纪念匈牙利第一位国王圣伊什特万, 是理解匈牙利国家身份的入口。重点看穹顶、立面和广场空间, 不必在抵达日爬高或排长队。</p>
+                <div class="route-next"><b>串联</b>沿Zrínyi utca往北走, 街道平直, 很适合拍圣殿回望视角, 之后进入Liberty Square。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>12:00</b><span>35min</span></div>
+              <div class="story-copy">
+                <h4>自由广场, 看匈牙利复杂的20世纪记忆</h4>
+                <p>广场周围有美国大使馆、苏联纪念碑和争议性二战纪念元素。这里不是单纯漂亮广场, 而是布达佩斯最适合观察政治记忆的公共空间之一。</p>
+                <div class="route-next"><b>串联</b>从广场步行约8分钟到国会大厦外观, 先看外部比例, 不进馆。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>12:45</b><span>35min</span></div>
+              <div class="story-copy">
+                <h4>国会大厦外观, 把天际线留到晚上再回看</h4>
+                <p>匈牙利国会大厦是多瑙河边最重要的哥特复兴式建筑。白天看细节和体量, 晚上再从布达侧看灯光倒影, 两次视角会完全不同。</p>
+                <div class="route-next"><b>串联</b>午餐回佩斯核心区, 如果Hungarikum Bistro已订位, 提前15分钟到。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>13:30</b><span>75min</span></div>
+              <div class="story-copy">
+                <h4>午餐吃一顿稳妥的匈牙利菜</h4>
+                <p>Hungarikum Bistro适合作为第一顿正式匈牙利餐: goulash、chicken paprikash、炖菜都稳。它不是猎奇餐厅, 好处是不会让抵达日变得不可控。</p>
+                <div class="route-next"><b>串联</b>午饭后直接回酒店办理入住和休息, 不再硬塞景点。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>17:00</b><span>90min</span></div>
+              <div class="story-copy">
+                <h4>坐2号电车看河岸, 在鞋履纪念碑安静停一下</h4>
+                <p>2号电车是布达佩斯最轻松的城市观景线。鞋履纪念碑纪念二战中在多瑙河边遇害的犹太人, 这里适合安静停留, 不适合摆拍。</p>
+                <div class="route-next"><b>串联</b>沿河走到链子桥, 日落后再看布达侧亮灯。</div>
+              </div>
+            </section>
+            <section class="story-stop">
+              <div class="story-time"><b>20:45</b><span>50min</span></div>
+              <div class="story-copy">
+                <h4>渔人堡夜景, 给第一天一个漂亮收束</h4>
+                <p>渔人堡是19世纪末纪念建国千年的观景建筑, 夜晚比白天更松弛。重点看国会大厦、多瑙河和链子桥的灯光关系。</p>
+                <div class="route-next"><b>串联</b>21:45左右打车回酒店, 保证第二天能早起去中央市场。</div>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Budapest">
+          <div class="deep-meta"><span>DAY 2</span><span>10.03 Sat</span><span>market / bridge / bath</span></div>
+          <h3>从市场走到山脚, 下午交给温泉</h3>
+          <p class="day-lede">这一天从中央市场的食物开始, 过自由桥到布达山脚, 再沿Bartók Béla Boulevard看书店、画廊和咖啡馆。下午泡Rudas, 晚上不再跨太远, 给城市和身体都留一点余地。</p>
+          <div class="day-brief">
+            <div><b>早餐</b><span>Central Market Hall吃Rétes酥皮卷, 顺手看辣椒粉和市场结构。</span></div>
+            <div><b>主线</b><span>中央市场 - 自由桥 - Gellért Cave Church - Bartók Béla Boulevard - Rudas。</span></div>
+            <div><b>故事</b><span>从日常食物、桥梁地形到奥斯曼温泉, 是布达佩斯最顺的慢线。</span></div>
+          </div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>08:30</b><span>60min</span></div><div class="story-copy"><h4>中央市场, 用早餐认识匈牙利食材</h4><p>市场大厅的钢结构、辣椒粉、香肠、鹅肝和Rétes酥皮卷, 比单纯打卡餐厅更能建立城市日常感。早餐不要吃太复杂, 重点是边走边看。</p><div class="route-next"><b>串联</b>市场门口就是自由桥, 从南侧出门直接上桥。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>10:30</b><span>35min</span></div><div class="story-copy"><h4>自由桥, 绿色铁桥和电车构图</h4><p>自由桥是布达佩斯最适合步行的桥之一, 桥身绿色、桥头和电车都很上镜。它把市场日常和布达山脚自然地接起来。</p><div class="route-next"><b>串联</b>过桥后步行5分钟到Gellért Cave Church。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>11:10</b><span>40min</span></div><div class="story-copy"><h4>盖勒特山洞穴教堂, 城市山体里的宗教空间</h4><p>这座教堂建在山洞中, 和盖勒特山、温泉文化共享同一片地形。它不是大景点, 但很适合补上布达佩斯“山与河”的空间感。</p><div class="route-next"><b>串联</b>沿Bartók Béla Boulevard走到Hadik或Kelet Café一带。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>12:15</b><span>75min</span></div><div class="story-copy"><h4>Bartók Béla Boulevard, 书店、画廊和本地咖啡</h4><p>这条街比Váci街更像布达佩斯日常。Hadik和Kelet一带适合午餐或咖啡, 周围常有书店、画廊和小店, 很符合city walk的节奏。</p><div class="route-next"><b>串联</b>午餐后公交、电车或沿河轻走去Rudas Baths。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>14:00</b><span>150min</span></div><div class="story-copy"><h4>Rudas Baths, 用奥斯曼浴场感恢复体力</h4><p>Rudas比Széchenyi更适合这条人文慢线。重点是穹顶浴池、屋顶池和奥斯曼浴场氛围。泡温泉这件事本身就是布达佩斯城市文化的一部分。</p><div class="route-next"><b>串联</b>泡完回酒店休息, 或去Tóth Árpád promenade轻走。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>17:00</b><span>70min</span></div><div class="story-copy"><h4>布达城堡外围步道, 看佩斯侧城市景观</h4><p>Tóth Árpád promenade比城堡核心更安静, 适合看国会大厦、佩斯屋顶和老街。这里不追馆, 只给下午一个温柔的收尾。</p><div class="route-next"><b>串联</b>根据体力打车或公交回佩斯侧晚餐。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>19:00</b><span>90min</span></div><div class="story-copy"><h4>晚餐不要跨太远, 认真吃一顿就好</h4><p>Rosenstein更家常和犹太匈牙利菜, Stand25更现代。今天走路和泡汤都消耗体力, 晚上不建议再排长队或跑很远。</p><div class="route-next"><b>串联</b>如果还有精神, New York Café只作为拍照或一杯饮品。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Vienna">
+          <div class="deep-meta"><span>DAY 3</span><span>10.04 Sun</span><span>Budapest to Vienna</span></div>
+          <h3>维也纳只有一晚, 把Klimt、教堂和咖啡馆留完整</h3>
+          <p class="day-lede">这一天不是“浅尝维也纳”, 而是选一条高质量切片: 从布达佩斯坐火车到Wien Hbf, 下午看Belvedere和Klimt, 黄昏走Karlskirche与Secession, 晚上进入咖啡馆和老城灯光。</p>
+          <div class="day-brief"><div><b>交通</b><span>Budapest-Keleti到Wien Hbf约2小时40分, 具体班次以购票页为准。</span></div><div><b>艺术</b><span>Upper Belvedere只抓Klimt、Schiele和分离派核心。</span></div><div><b>咖啡</b><span>Café Sperl更文艺, Cafe Central更宏大但要错峰。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>07:00</b><span>45min</span></div><div class="story-copy"><h4>退房去Keleti, 不再加布达佩斯景点</h4><p>跨城日最容易因为“再看一点”而乱掉。早上只做退房、咖啡和去车站, 把维也纳下午留完整。</p><div class="route-next"><b>串联</b>地铁或打车到Budapest-Keleti, 提前找站台。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>09:30</b><span>160min</span></div><div class="story-copy"><h4>火车从布达佩斯到维也纳, 进入帝国双城叙事</h4><p>这一段铁路把奥匈帝国两个重要城市连起来。车上可以读《昨日的世界》或《多瑙河》相关章节, 比刷手机更进入氛围。</p><div class="route-next"><b>串联</b>到Wien Hbf后入住或寄存, 午餐就近解决。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>14:00</b><span>120min</span></div><div class="story-copy"><h4>Upper Belvedere, 看《吻》也看宫殿权力空间</h4><p>Belvedere原是欧根亲王夏宫。今天重点看Klimt《吻》、Schiele和维也纳分离派相关作品。不要试图把每个展厅都啃完, 维也纳只有一晚, 要留余味。</p><div class="route-next"><b>串联</b>从花园向北慢走, 约20分钟到Karlskirche。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>16:15</b><span>40min</span></div><div class="story-copy"><h4>Karlskirche, 巴洛克教堂和瘟疫后的城市愿望</h4><p>查理教堂为纪念瘟疫结束而建, 两根柱子带有罗马图拉真柱意象。黄昏时水池倒影很适合拍, 但不用排很久进内部。</p><div class="route-next"><b>串联</b>步行约10分钟到Secession。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>17:00</b><span>25min</span></div><div class="story-copy"><h4>Secession, 从帝国古典走到现代主义</h4><p>金色月桂叶穹顶和“每个时代有它的艺术”精神, 是维也纳从帝国古典迈向现代主义的标志。看外观即可, 作为Belvedere后的延伸。</p><div class="route-next"><b>串联</b>步行去Café Sperl, 或坐电车去内城咖啡馆。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>17:40</b><span>60min</span></div><div class="story-copy"><h4>一间咖啡馆, 比多刷一个景点更重要</h4><p>维也纳咖啡馆是公共客厅。Café Sperl更像旧日常, Vollpension更轻松, Cafe Central更有建筑震撼但排队风险高。选一间坐下来, 才像来过维也纳。</p><div class="route-next"><b>串联</b>咖啡后往Graben和St. Stephen's Cathedral方向散步。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>19:30</b><span>90min</span></div><div class="story-copy"><h4>晚餐和老城灯光, 不再赶第二个博物馆</h4><p>Lugeck、Glacis Beisl或Figlmüller按位置和排队情况选。晚餐后走Graben、Stephansplatz, 让维也纳以灯光和街道结束。</p><div class="route-next"><b>串联</b>回酒店早睡, D4早上直接西进湖区。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Lake">
+          <div class="deep-meta"><span>DAY 4</span><span>10.05 Mon</span><span>Vienna to Salzkammergut</span></div>
+          <h3>从维也纳进入湖区, 抵达日只看湖面</h3>
+          <p class="day-lede">这一天的美感在移动本身: 从帝国城市坐火车向西, 到Salzburg换150路进入Fuschlsee和Wolfgangsee一带。抵达后不要追Hallstatt, 只在St. Gilgen或Fuschl把节奏慢下来。</p>
+          <div class="day-brief"><div><b>交通轴</b><span>Wien Hbf - Salzburg Hbf - 150路 - Fuschl/St. Gilgen。</span></div><div><b>住宿</b><span>St. Gilgen或Fuschl优先, 不住Hallstatt。</span></div><div><b>下午</b><span>Café Dallmann、老街、码头和湖边慢走。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>07:00</b><span>45min</span></div><div class="story-copy"><h4>直接向西, 不把维也纳早晨塞满</h4><p>今天的价值是从城市进入湖区。早上只退房和去Wien Hbf, 不再加新景点, 否则下午抵达湖边会疲惫。</p><div class="route-next"><b>串联</b>住Hbf或Andaz附近最省力, 步行或短程打车到车站。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>09:00</b><span>150min</span></div><div class="story-copy"><h4>ÖBB西进Salzburg, 风景慢慢变开阔</h4><p>从维也纳盆地进入阿尔卑斯边缘, 窗外会逐渐出现更开阔的乡野和山形。车上休息, 不要把湖区第一天下午消耗在疲惫里。</p><div class="route-next"><b>串联</b>到Salzburg Hbf后直接找150路站台。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>12:00</b><span>60-80min</span></div><div class="story-copy"><h4>150路巴士, 是这次湖区的生命线</h4><p>150路连接Salzburg、Fuschlsee、St. Gilgen和Strobl。它让你们可以不用自驾也进入湖区, 但班次要提前查好, 晚上不要太依赖临时发挥。</p><div class="route-next"><b>串联</b>住Fuschl就先下车, 住St. Gilgen继续坐到镇中心。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>14:30</b><span>75min</span></div><div class="story-copy"><h4>Café Dallmann, 用甜点把速度降下来</h4><p>St. Gilgen老街上的经典甜点咖啡停靠, 很适合抵达后坐下来。这里不是为了“吃一家网红店”, 而是给两晚湖区开一个慢节奏。</p><div class="route-next"><b>串联</b>出门就是老街, 步行到Mozartplatz和码头。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>16:00</b><span>90min</span></div><div class="story-copy"><h4>St. Gilgen湖边, 看远山、码头和小镇比例</h4><p>St. Gilgen和莫扎特家族有关, 但这里最值得的不是某个单点, 而是湖面、码头、远山和老街之间的度假感。它比Hallstatt更适合你们想要的人少和自然。</p><div class="route-next"><b>串联</b>日落前回镇中心, 晚餐就近。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>18:30</b><span>90min</span></div><div class="story-copy"><h4>湖区第一晚, 就近吃饭就很好</h4><p>Gasthof zur Post、Wirt am Gries或住宿小镇的湖区餐厅都可以。点鳟鱼、schnitzel或奥地利家常菜, 晚上不跨镇追餐厅。</p><div class="route-next"><b>串联</b>饭后只湖边散步, 查第二天天气和山线开放。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Lake">
+          <div class="deep-meta"><span>DAY 5</span><span>10.06 Tue</span><span>Wolfgangsee slow day</span></div>
+          <h3>湖区只做一座山和一段湖岸</h3>
+          <p class="day-lede">这一天最怕贪心。晴天选Zwölferhorn或Schafbergbahn其中一个高处视角, 下午给Wolfgangsee湖船、St. Wolfgang和Strobl。雨天就改Bad Ischl和Zauner, 不硬上山。</p>
+          <div class="day-brief"><div><b>晴天</b><span>Zwölferhorn缆车看Wolfgangsee全景, 或Schafbergbahn经典登山铁路。</span></div><div><b>午后</b><span>St. Wolfgang午餐, 湖岸或湖船到Strobl。</span></div><div><b>雨天</b><span>Bad Ischl + Zauner, 走皇室小镇甜点线。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>07:00</b><span>60min</span></div><div class="story-copy"><h4>早餐时先看天气, 再决定山线</h4><p>湖区玩法很吃天气。晴天上山, 阴雨就去Bad Ischl。不要为了“计划写了”而硬冲高处, 那样只会看到雾和疲惫。</p><div class="route-next"><b>串联</b>住St. Gilgen可步行去Zwölferhorn; 住Fuschl先坐150路到St. Gilgen。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>08:30</b><span>150min</span></div><div class="story-copy"><h4>Zwölferhorn, 从高处看湖和小镇关系</h4><p>这里比Hallstatt更适合慢旅行。视野开阔, 可以看到湖、山和小镇如何嵌在一起。若选择Schafbergbahn, 就把上午交给St. Wolfgang登山铁路, 不要两个都做。</p><div class="route-next"><b>串联</b>下山后回St. Gilgen码头, 或坐巴士去St. Wolfgang。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>12:30</b><span>80min</span></div><div class="story-copy"><h4>St. Wolfgang午餐, 在热闹小镇停一下</h4><p>St. Wolfgang比St. Gilgen更热闹, 适合吃一顿湖区正餐。白马酒店一带有经典度假地氛围, 但不用为某一家餐厅排过久。</p><div class="route-next"><b>串联</b>午饭后走老街到湖边, 接湖船或步行线。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>14:00</b><span>120min</span></div><div class="story-copy"><h4>Wolfgangsee湖岸或湖船, 让湖区真正慢下来</h4><p>重点不是打卡镇名, 而是看码头、木屋、草地、远山和慢船。Strobl更安静, 适合把下午的速度降下来。</p><div class="route-next"><b>串联</b>到Strobl后咖啡或湖边坐一会, 再用150路回住宿地。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>16:30</b><span>60min</span></div><div class="story-copy"><h4>一杯咖啡和一点留白, 比再赶一个镇更重要</h4><p>湖区最好的时刻往往不是景点, 而是坐在湖边什么也不赶。下午这段专门留给发呆、拍照和散步。</p><div class="route-next"><b>串联</b>查150路返程, 不要拖到太晚。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>雨天</b><span>半天</span></div><div class="story-copy"><h4>Bad Ischl + Zauner, 雨天也有旧奥地利味道</h4><p>Bad Ischl有奥匈皇室夏季度假气质, Zauner是经典甜点停靠。雨天走这条, 比在山上赌能见度舒服得多。</p><div class="route-next"><b>串联</b>用150路和区域交通串联, 以当天交通App为准。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 6</span><span>10.07 Wed</span><span>Lake to Prague</span></div>
+          <h3>离开湖区, 借Salzburg轻轻过渡到布拉格</h3>
+          <p class="day-lede">这一天是长移动日。目标不是把Salzburg也玩透, 而是从湖区回到铁路网络, 在Mirabell Garden和咖啡馆短暂停一下, 然后稳定抵达布拉格。晚上只走老城夜景。</p>
+          <div class="day-brief"><div><b>上午</b><span>150路回Salzburg, Mirabell Garden短走。</span></div><div><b>跨国</b><span>ÖBB/CD经Linz或Wien转Prague, RegioJet作备选。</span></div><div><b>晚上</b><span>入住后Lokál或Kantýna, 再轻走老城广场。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>06:45</b><span>45min</span></div><div class="story-copy"><h4>早起整理行李, 今天只求移动顺</h4><p>这是全程最长移动日。早餐、退房和去巴士站都要留余量, 不要临时加湖区景点。</p><div class="route-next"><b>串联</b>提前查150路, 目标是上午回到Salzburg Hbf。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>09:30</b><span>70min</span></div><div class="story-copy"><h4>Mirabell Garden, Salzburg只轻轻看一眼</h4><p>花园轴线、城堡远景和《音乐之声》的城市想象都在这里。今天不进要塞、不深玩老城, 否则会压缩去布拉格的交通缓冲。</p><div class="route-next"><b>串联</b>步行到老城边缘或咖啡馆, 但保持车站可回撤。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>10:50</b><span>50min</span></div><div class="story-copy"><h4>Café Tomaselli或Afro Café, 吃一顿受控的早午餐</h4><p>Tomaselli更经典, Afro Café更轻松。选不排队的一家, 今天餐厅服务于交通, 不是交通服务于餐厅。</p><div class="route-next"><b>串联</b>11:45前回Salzburg Hbf取行李或进站。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>12:30</b><span>6-7h</span></div><div class="story-copy"><h4>从Salzburg到Prague, 车上整理照片和体力</h4><p>这段从奥地利湖区进入波希米亚。优先选换乘少、到达Praha hl.n.时间稳定的方案。车上可以整理前两天湖区照片, 不要安排抵达后重景点。</p><div class="route-next"><b>串联</b>到Praha hl.n.后步行、地铁或短程打车到酒店。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>20:00</b><span>80min</span></div><div class="story-copy"><h4>第一顿布拉格晚餐, 就近吃捷克菜</h4><p>Lokál适合捷克菜和tank beer, Kantýna适合肉食。选择离酒店近的一家, 不要拖着疲惫跨城。</p><div class="route-next"><b>串联</b>饭后Old Town Square - Astronomical Clock - Powder Tower轻走回酒店。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 7</span><span>10.08 Thu</span><span>castle / river / sunset</span></div>
+          <h3>布拉格的清晨给桥, 上午给城堡, 黄昏给Letná</h3>
+          <p class="day-lede">布拉格人多, 所以清晨先去查理大桥。上午上城堡区, 午餐在高处收束, 下午走小城和Kampa, 再从Josefov或博物馆里二选一, 最后去Letná看桥群和屋顶。</p>
+          <div class="day-brief"><div><b>清晨</b><span>Charles Bridge只拍20到30分钟, 趁人潮前离开。</span></div><div><b>上午</b><span>城堡区抓St. Vitus、Old Royal Palace和Golden Lane。</span></div><div><b>黄昏</b><span>Letná Park看桥群, 是布拉格最好的收尾视角。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>06:40</b><span>45min</span></div><div class="story-copy"><h4>查理大桥清晨, 不和人潮硬碰硬</h4><p>查理大桥连接老城和小城, 是布拉格城市叙事的中心轴。清晨看桥塔、圣人雕像和伏尔塔瓦河, 拍完就走, 不要等游客团上桥。</p><div class="route-next"><b>串联</b>桥后走向Kampa, 或坐车去Café Savoy早餐。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>08:00</b><span>75min</span></div><div class="story-copy"><h4>Café Savoy, 用正式早餐打开布拉格</h4><p>新艺术风格室内、经典早餐和甜点让它比普通游客咖啡馆更值得坐。最好预约, 否则改Café Louvre。</p><div class="route-next"><b>串联</b>早餐后坐电车到Malostranská或Pražský hrad方向上城堡。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>09:45</b><span>150min</span></div><div class="story-copy"><h4>Prague Castle, 看捷克王权和哥特大教堂</h4><p>圣维特大教堂看哥特立面、彩窗和捷克王权象征; Old Royal Palace补历史空间; Golden Lane看小尺度生活空间。城堡区不用每个馆都深看。</p><div class="route-next"><b>串联</b>从城堡区向下走到Kuchyň午餐, 动线自然。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>12:30</b><span>75min</span></div><div class="story-copy"><h4>Kuchyň, 把城堡区收束成一顿午餐</h4><p>这里的视野和位置都很好, 可以把上午城堡区行程自然收尾。不需要再为单独观景台绕路。</p><div class="route-next"><b>串联</b>下坡走Malá Strana, 接Lennon Wall和Kampa Island。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>14:00</b><span>90min</span></div><div class="story-copy"><h4>小城、Lennon Wall和Kampa, 从宏大回到河岸日常</h4><p>小城比老城更适合慢走。Lennon Wall是冷战时期青年表达和反体制记忆的符号, 今天更偏涂鸦景点; Kampa则把节奏带回河边。</p><div class="route-next"><b>串联</b>过桥或坐电车回老城, 下午从Josefov和博物馆二选一。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>16:00</b><span>90min</span></div><div class="story-copy"><h4>Josefov或National Museum, 只选一条历史线</h4><p>Josefov看犹太区和墓园, 更人文; National Museum适合雨天和建筑空间。两条都做会变成赶场, 选一条认真看更好。</p><div class="route-next"><b>串联</b>天气好去Letná; 下雨就把时间留给博物馆和咖啡。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>18:00</b><span>60min</span></div><div class="story-copy"><h4>Letná Park, 用桥群和屋顶结束布拉格</h4><p>Letná能看到伏尔塔瓦河桥群和老城屋顶, 是布拉格最适合收尾的一处远景。比在老城人潮里继续绕更舒服。</p><div class="route-next"><b>串联</b>下山后打车或电车去晚餐, 不再安排夜间大景点。</div></div></section>
+          </div>
+        </article>
+
+        <article class="deep-day mag-day" data-city="Prague">
+          <div class="deep-meta"><span>DAY 8</span><span>10.09 Fri</span><span>departure</span></div>
+          <h3>离境日只做最后一组画面, 然后从容去机场</h3>
+          <p class="day-lede">14:00从布拉格起飞, 这天不安排收费景点。早餐后只补Municipal House和Powder Tower一组老城画面, 11:30前离开市区。</p>
+          <div class="day-brief"><div><b>早餐</b><span>Eska偏现代, Café Louvre偏文学咖啡馆, 选离酒店近的。</span></div><div><b>补拍</b><span>Municipal House和Powder Tower, 两处很近。</span></div><div><b>机场</b><span>打车最稳; 公共交通为Metro A + 59路无轨电车。</span></div></div>
+          <div class="story-flow">
+            <section class="story-stop"><div class="story-time"><b>08:30</b><span>70min</span></div><div class="story-copy"><h4>最后一顿早餐, 不要离酒店太远</h4><p>Eska适合现代面包和早午餐, Café Louvre更有文学咖啡馆气质。离境日的原则是好吃但不冒险, 不去需要排队太久的地方。</p><div class="route-next"><b>串联</b>早餐后只在老城东侧短线补拍, 不过河。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>09:45</b><span>45min</span></div><div class="story-copy"><h4>Municipal House和Powder Tower, 布拉格最后一组立面</h4><p>市民会馆是新艺术风格代表, 火药塔则保留老城门意象。两处相邻, 很适合做最后的建筑画面, 不会拖慢离境节奏。</p><div class="route-next"><b>串联</b>步行回酒店或取行李点, 10:45开始收尾。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>10:45</b><span>30min</span></div><div class="story-copy"><h4>回酒店取行李, 检查证件和退税资料</h4><p>确认护照、退税单、充电器、相机卡和行李重量。离境日这件事比再看一个景点重要。</p><div class="route-next"><b>串联</b>11:30前离开市区。</div></div></section>
+            <section class="story-stop"><div class="story-time"><b>11:30</b><span>45-60min</span></div><div class="story-copy"><h4>去PRG机场, 优先选择稳妥路线</h4><p>打车最稳; 公共交通是地铁A线到Nádraží Veleslavín, 再换59路无轨电车到机场。带大件行李时不要为了省一点钱把换乘做复杂。</p><div class="route-next"><b>串联</b>12:30前到机场, 留退税、安检和登机缓冲。</div></div></section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="deep-schedule-archive" class="shell legacy-schedule" aria-hidden="true">
       <div class="section-title">
         <h2>每日精细日程</h2>
         <p>这里改成真正能照着走的执行表: 每天写清几点、玩多久、在哪里吃、景点看什么、为什么值得看, 以及每一站怎么顺路串联。</p>
