@@ -545,6 +545,105 @@
       font-size: 15px;
     }
 
+    .prompt-panel {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.85fr) minmax(320px, 1.15fr);
+      border: 1px solid var(--line);
+      background: var(--line);
+      gap: 1px;
+      margin-top: 1px;
+    }
+
+    .prompt-copy, .code-shot {
+      background: #080809;
+      min-height: 430px;
+      padding: clamp(22px, 3vw, 38px);
+    }
+
+    .prompt-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .prompt-copy h3 {
+      margin: 0;
+      font-size: clamp(36px, 4.8vw, 76px);
+      line-height: 0.9;
+      letter-spacing: -0.045em;
+      font-weight: 520;
+      text-transform: uppercase;
+    }
+
+    .prompt-copy h3 span { color: var(--muted); }
+
+    .prompt-copy p {
+      margin: 0;
+      max-width: 620px;
+      color: #c7c9cc;
+      font-size: 17px;
+    }
+
+    .code-shot {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .code-shot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0 18%, rgba(85,167,255,0.12) 18% 18.2%, transparent 18.2% 100%),
+        radial-gradient(circle at 82% 12%, rgba(255,51,102,0.12), transparent 28%);
+      pointer-events: none;
+    }
+
+    .code-window {
+      position: relative;
+      border: 1px solid var(--line-strong);
+      background: #0d0e10;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.34);
+    }
+
+    .code-title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 14px;
+      color: var(--muted);
+      font: 900 10px/1 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .code-title span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--hot);
+    }
+
+    .code-title span:nth-child(2) { background: var(--warn); }
+    .code-title span:nth-child(3) { background: var(--green); }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      white-space: pre-wrap;
+      color: #e9ecef;
+      font: 700 12px/1.72 var(--mono);
+    }
+
+    code { font-family: inherit; }
+
+    .token-hot { color: var(--hot); }
+    .token-blue { color: var(--blue); }
+    .token-green { color: var(--green); }
+
     .footer {
       min-height: 260px;
       display: grid;
@@ -585,7 +684,7 @@
 
     @media (max-width: 900px) {
       body { background-size: 50vw 100%, 100% 150px, auto; }
-      .hero, .grid, .notes, .footer { grid-template-columns: 1fr; }
+      .hero, .grid, .notes, .prompt-panel, .footer { grid-template-columns: 1fr; }
       .hero { min-height: 0; }
       .hero-side { min-height: 390px; }
       .status-strip { grid-template-columns: 1fr; }
@@ -616,22 +715,22 @@
         <div>
           <span class="kicker zh">免费公网部署</span>
           <span class="kicker en">Free public launch</span>
-          <h1 class="zh"><span>Deploy</span><br>公网网站<br>四步走。</h1>
-          <h1 class="en"><span>Deploy</span><br>Public Site<br>in 4 Steps.</h1>
+          <h1 class="zh"><span>Codex</span><br>自动部署<br>公网网站。</h1>
+          <h1 class="en"><span>Codex</span><br>Automates<br>Public Deploy.</h1>
         </div>
         <p class="hero-copy zh">
-          这是一份极简操作图：先让 GitHub 承载代码，再让 Cloudflare Pages 发布网页。如果要使用个人域名，必须先注册域名，再把 DNS 托管到 Cloudflare。
+          核心不是手动点完每个后台，而是把目标交给 Codex：它读取本地项目，调用 GitHub 推送代码，再通过 Cloudflare 插件创建 Pages、检查部署、配置域名。
         </p>
         <p class="hero-copy en">
-          A compact visual playbook: host the files on GitHub, publish them with Cloudflare Pages, then connect a custom domain after the domain is registered and delegated to Cloudflare DNS.
+          The point is not clicking every dashboard manually. Give Codex the goal: it reads the local project, pushes to GitHub, then uses the Cloudflare plugin to create Pages, verify deployment, and prepare the custom domain.
         </p>
         <div class="status-strip">
-          <div class="zh">当前可访问 <b>Pages 免费二级域名</b></div>
-          <div class="zh">个人域名 <b>需先注册购买</b></div>
-          <div class="zh">DNS 托管 <b>Cloudflare Free 可用</b></div>
-          <div class="en">Now live <b>Pages subdomain</b></div>
-          <div class="en">Custom domain <b>registration required</b></div>
-          <div class="en">DNS hosting <b>Cloudflare Free works</b></div>
+          <div class="zh">自动化中枢 <b>Codex Agent</b></div>
+          <div class="zh">发布平台 <b>Cloudflare Pages</b></div>
+          <div class="zh">版本同步 <b>GitHub Push</b></div>
+          <div class="en">Automation hub <b>Codex Agent</b></div>
+          <div class="en">Hosting layer <b>Cloudflare Pages</b></div>
+          <div class="en">Version sync <b>GitHub Push</b></div>
         </div>
       </div>
       <div class="hero-side">
@@ -640,10 +739,10 @@
           <h2 class="zh">操作路径</h2>
           <h2 class="en">Launch Path</h2>
           <ol>
-            <li><em>01.</em><span class="zh">准备代码仓库</span><span class="en">Prepare the repo</span></li>
-            <li><em>02.</em><span class="zh">连接 Cloudflare Pages</span><span class="en">Connect Pages</span></li>
-            <li><em>03.</em><span class="zh">注册域名并托管 DNS</span><span class="en">Register domain and DNS</span></li>
-            <li><em>04.</em><span class="zh">绑定域名并验证 HTTPS</span><span class="en">Attach domain and verify HTTPS</span></li>
+            <li><em>01.</em><span class="zh">给 Codex 明确目标</span><span class="en">Give Codex the goal</span></li>
+            <li><em>02.</em><span class="zh">GitHub 保存与同步</span><span class="en">Sync through GitHub</span></li>
+            <li><em>03.</em><span class="zh">Cloudflare 自动发布</span><span class="en">Deploy with Cloudflare</span></li>
+            <li><em>04.</em><span class="zh">域名与 HTTPS 验收</span><span class="en">Verify domain and HTTPS</span></li>
           </ol>
         </div>
       </div>
@@ -652,18 +751,18 @@
     <section class="section-title">
       <h2 class="zh">STEP BY STEP</h2>
       <h2 class="en">STEP BY STEP</h2>
-      <p class="zh">示意图里的账号、域名和项目名均为 mock 数据。真实操作时把它们替换成你的 GitHub 仓库、Cloudflare 项目和已注册域名。</p>
-      <p class="en">All account names, domains, and project names below are mock data. Replace them with your GitHub repository, Cloudflare project, and registered domain.</p>
+      <p class="zh">这四步展示的是 Codex + GitHub + Cloudflare 插件的自动化链路。示意图里的账号、域名和项目名均为 mock 数据。</p>
+      <p class="en">These four steps describe the Codex + GitHub + Cloudflare plugin automation path. All account names, domains, and project names are mock data.</p>
     </section>
 
     <main class="grid" aria-label="Deployment steps">
       <article class="step dark" id="step-1">
         <div>
           <div class="step-no">01</div>
-          <h3 class="zh">把网页放进 GitHub 仓库</h3>
-          <h3 class="en">Put the site in GitHub</h3>
-          <p class="zh">仓库负责保存网页源文件。以后你本地改完旅行手札，只要推送到主分支，Cloudflare Pages 就能自动重新发布。</p>
-          <p class="en">GitHub stores the site files. After future edits, push to the main branch and Cloudflare Pages can publish the new version automatically.</p>
+          <h3 class="zh">让 Codex 读取本地项目</h3>
+          <h3 class="en">Let Codex read the project</h3>
+          <p class="zh">把站点目录、发布目录、仓库名、是否需要自定义域名说清楚。Codex 会检查文件结构和 Git 状态，再决定部署方式。</p>
+          <p class="en">Tell Codex the site folder, publish directory, repo name, and whether a custom domain is needed. Codex inspects the file tree and Git state before deploying.</p>
         </div>
         <div class="mock" data-label="Mock Screenshot / GitHub Repository">
           <div class="browser-bar">
@@ -675,9 +774,9 @@
             <div>
               <div class="content-lines"><i></i><i></i><i></i></div>
               <div class="form">
-                <div class="field">Repository <div class="value">your-site</div></div>
-                <div class="field">Branch <div class="value">main</div></div>
-                <div class="field">Publish Folder <div class="value">/html-guide</div></div>
+                <div class="field">Local Site Folder <div class="value">path/to/html-guide</div></div>
+                <div class="field">Repo Name <div class="value">your-site</div></div>
+                <div class="field">Target <div class="value">Public Website</div></div>
               </div>
             </div>
           </div>
@@ -687,10 +786,10 @@
       <article class="step" id="step-2">
         <div>
           <div class="step-no">02</div>
-          <h3 class="zh">用 Cloudflare Pages 发布</h3>
-          <h3 class="en">Publish with Cloudflare Pages</h3>
-          <p class="zh">在 Cloudflare 里创建 Pages 项目，连接 GitHub 仓库。构建命令可以留空，输出目录填写实际网页目录。</p>
-          <p class="en">Create a Pages project in Cloudflare and connect the GitHub repo. Leave build command empty for a static folder and set the output directory.</p>
+          <h3 class="zh">Codex 推送 GitHub 并触发同步</h3>
+          <h3 class="en">Codex pushes and syncs</h3>
+          <p class="zh">Codex 会提交网页文件、推送到主分支，并确保后续每次更新都能通过 GitHub 触发 Cloudflare Pages 自动构建。</p>
+          <p class="en">Codex commits the site, pushes to the main branch, and keeps future updates tied to Cloudflare Pages automatic builds.</p>
         </div>
         <div class="mock" data-label="Mock Screenshot / Cloudflare Pages Setup">
           <div class="browser-bar">
@@ -699,11 +798,11 @@
           </div>
           <div class="mock-body">
             <div class="form">
-              <div class="field">Project Name <div class="value">your-project</div></div>
+              <div class="field">GitHub Action <div class="value">commit + push</div></div>
               <div class="field">Production Branch <div class="value">main</div></div>
-              <div class="field">Build Command <div class="value">-</div></div>
-              <div class="field">Output Directory <div class="value">path/to/html-guide</div></div>
-              <div class="cta">Save and Deploy</div>
+              <div class="field">Publish Directory <div class="value">path/to/html-guide</div></div>
+              <div class="field">Trigger <div class="value">Cloudflare Pages</div></div>
+              <div class="cta">Push to Deploy</div>
             </div>
           </div>
         </div>
@@ -712,10 +811,10 @@
       <article class="step" id="step-3">
         <div>
           <div class="step-no">03</div>
-          <h3 class="zh">注册域名，交给 Cloudflare DNS</h3>
-          <h3 class="en">Register domain and move DNS</h3>
-          <p class="zh">DNS 不用额外购买，Cloudflare Free 可以托管。但个人域名本身必须先注册。注册后在 Cloudflare 添加站点，选择 Free Plan，再把注册商 nameserver 改成 Cloudflare 给出的两条。</p>
-          <p class="en">Cloudflare DNS is available on the Free plan, but the custom domain itself must be registered first. Add the domain to Cloudflare, choose Free, then replace registrar nameservers with the two Cloudflare nameservers.</p>
+          <h3 class="zh">Cloudflare 插件创建 Pages</h3>
+          <h3 class="en">Cloudflare plugin creates Pages</h3>
+          <p class="zh">Codex 通过 Cloudflare 插件创建 Pages 项目，设置发布目录，等待部署完成并检查公网 URL。无需你反复在控制台里找入口。</p>
+          <p class="en">Codex uses the Cloudflare plugin to create the Pages project, set the publish directory, wait for deployment, and verify the public URL.</p>
         </div>
         <div class="mock" data-label="Mock Screenshot / DNS Delegation">
           <div class="browser-bar">
@@ -723,13 +822,13 @@
             <div class="url">registrar.example / nameservers</div>
           </div>
           <div class="mock-body">
-            <div class="field">Domain <div class="value">example.com</div></div>
+            <div class="field">Cloudflare Plugin <div class="value">pages.create</div></div>
             <div class="ns-list">
-              <div class="ns">alpha.ns.cloudflare.com</div>
-              <div class="ns">beta.ns.cloudflare.com</div>
+              <div class="ns">Project: your-project</div>
+              <div class="ns">Output: path/to/html-guide</div>
             </div>
             <div class="form">
-              <div class="cta">Replace Nameservers</div>
+              <div class="cta">Verify Deployment</div>
             </div>
           </div>
         </div>
@@ -738,10 +837,10 @@
       <article class="step dark" id="step-4">
         <div>
           <div class="step-no">04</div>
-          <h3 class="zh">绑定域名并检查公网访问</h3>
-          <h3 class="en">Attach domain and verify access</h3>
-          <p class="zh">等 Cloudflare Zone 激活后，在 Pages 项目里添加自定义域名。DNS 记录指向 Pages 二级域名，最后确认 HTTPS 和移动端访问都正常。</p>
-          <p class="en">After the zone becomes active, add the custom domain in the Pages project. Point DNS records to the Pages subdomain, then verify HTTPS and mobile access.</p>
+          <h3 class="zh">域名与 HTTPS 留给最终验收</h3>
+          <h3 class="en">Verify domain and HTTPS</h3>
+          <p class="zh">如果使用个人域名，域名必须先注册。Codex 可通过 Cloudflare 插件检查 Zone、创建 DNS 记录和 Pages 自定义域名；nameserver 修改仍需在注册商完成。</p>
+          <p class="en">A custom domain must be registered first. Codex can check the zone, create DNS records, and attach the Pages domain through the Cloudflare plugin; nameserver changes still happen at the registrar.</p>
         </div>
         <div class="mock" data-label="Mock Screenshot / DNS Records">
           <div class="browser-bar">
@@ -790,6 +889,67 @@
         <b>04 / HTTPS</b>
         <p class="zh">nameserver 生效后再开启并检查 HTTPS。</p>
         <p class="en">Enable and verify HTTPS after nameservers propagate.</p>
+      </div>
+    </section>
+
+    <section class="section-title">
+      <h2 class="zh">提示词模板</h2>
+      <h2 class="en">PROMPT TEMPLATE</h2>
+      <p class="zh">把下面这段给 Codex，并确保 GitHub 与 Cloudflare 插件已经授权。Codex 就能按目标执行、遇到需要外部确认时再停下来问你。</p>
+      <p class="en">Give Codex this prompt after GitHub and Cloudflare plugins are authorized. Codex can execute the deployment and pause only when external confirmation is required.</p>
+    </section>
+
+    <section class="prompt-panel" id="prompt-template">
+      <div class="prompt-copy">
+        <div>
+          <span class="kicker zh">可复制给 Codex</span>
+          <span class="kicker en">Copy to Codex</span>
+          <h3 class="zh">一句话<br><span>启动部署代理。</span></h3>
+          <h3 class="en">One prompt<br><span>starts the agent.</span></h3>
+        </div>
+        <p class="zh">这段提示词强调“自动化执行”，不是让你手动照着教程点。Codex 会自己检查仓库、提交推送、调用 Cloudflare Pages、验证公网访问。</p>
+        <p class="en">This prompt asks Codex to execute the workflow, not merely explain it. Codex checks the repo, commits, pushes, calls Cloudflare Pages, and verifies public access.</p>
+      </div>
+      <div class="code-shot" aria-label="Prompt code container mock screenshot">
+        <div class="code-window">
+          <div class="code-title"><span></span><span></span><span></span> codex prompt / deploy.md</div>
+          <pre class="zh"><code><span class="token-hot">请作为部署代理执行：</span>
+把当前本地静态网站部署成公网可访问网站。
+
+项目要求：
+1. 检查本地站点目录：<span class="token-blue">&lt;发布目录&gt;</span>
+2. 创建或更新 GitHub 仓库：<span class="token-blue">&lt;GitHub仓库名&gt;</span>
+3. 提交并推送到 main，后续更新支持 git push 自动同步
+4. 使用 <span class="token-green">Cloudflare 插件</span> 创建 Pages 项目
+5. 设置构建配置：无构建命令，输出目录为 <span class="token-blue">&lt;发布目录&gt;</span>
+6. 部署后检查公网 URL 是否 200，资源和页面导航是否正常
+7. 如需自定义域名 <span class="token-blue">&lt;自定义域名&gt;</span>：
+   - 先确认域名是否已注册
+   - 检查或创建 Cloudflare Zone
+   - 添加 Pages Custom Domain 和 DNS 记录
+   - nameserver 需要我去注册商后台改时，请明确告诉我
+
+请直接执行；只有授权、购买域名、修改注册商 nameserver
+这类必须我确认的步骤再暂停询问。</code></pre>
+          <pre class="en"><code><span class="token-hot">Act as my deployment agent:</span>
+Deploy the current local static site as a public website.
+
+Requirements:
+1. Inspect the local site folder: <span class="token-blue">&lt;publish-directory&gt;</span>
+2. Create or update the GitHub repository: <span class="token-blue">&lt;github-repo-name&gt;</span>
+3. Commit and push to main; future updates should sync via git push
+4. Use the <span class="token-green">Cloudflare plugin</span> to create a Pages project
+5. Configure build settings: no build command, output directory is <span class="token-blue">&lt;publish-directory&gt;</span>
+6. After deployment, verify the public URL returns 200 and assets/navigation work
+7. If using custom domain <span class="token-blue">&lt;custom-domain&gt;</span>:
+   - Confirm the domain is registered
+   - Check or create the Cloudflare Zone
+   - Add Pages Custom Domain and DNS records
+   - Tell me clearly if I must update registrar nameservers
+
+Execute directly. Pause only for authorization, domain purchase,
+or registrar nameserver changes that require my confirmation.</code></pre>
+        </div>
       </div>
     </section>
 
