@@ -380,6 +380,87 @@
       box-shadow: 0 12px 32px rgba(48, 40, 29, 0.07);
     }
 
+    .decision-legend,
+    .source-strip,
+    .food-card-grid,
+    .route-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .decision-legend {
+      margin: -14px 0 28px;
+      color: var(--muted);
+    }
+
+    .mark {
+      --mark-bg: rgba(83, 98, 68, 0.1);
+      --mark-border: rgba(83, 98, 68, 0.32);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      padding: 5px 11px;
+      border: 1px solid var(--mark-border);
+      border-radius: 999px;
+      background: var(--mark-bg);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .mark::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border: 1px solid currentColor;
+      background: currentColor;
+      transform: rotate(45deg);
+    }
+
+    .mark.option {
+      --mark-bg: rgba(201, 185, 150, 0.22);
+      --mark-border: rgba(201, 185, 150, 0.72);
+      color: #7a6338;
+    }
+
+    .mark.option::before {
+      border-radius: 50%;
+      transform: none;
+      background: transparent;
+    }
+
+    .mark.skip {
+      --mark-bg: rgba(120, 85, 70, 0.09);
+      --mark-border: rgba(120, 85, 70, 0.32);
+      color: #765142;
+    }
+
+    .mark.skip::before {
+      width: 12px;
+      height: 2px;
+      border: 0;
+      background: currentColor;
+      transform: none;
+    }
+
+    .route-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      border: 1px solid rgba(88, 79, 61, 0.14);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(245, 239, 227, 0.5);
+      color: rgba(81, 72, 60, 0.82);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
     #live-map {
       width: 100%;
       min-height: 620px;
@@ -900,6 +981,86 @@
       border-bottom: 0;
     }
 
+    .food-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .food-card {
+      position: relative;
+      min-height: 290px;
+      border: 1px solid var(--line-soft);
+      background:
+        linear-gradient(180deg, rgba(255,250,240,0.78), rgba(245,239,227,0.72)),
+        var(--cream);
+      box-shadow: 0 16px 42px rgba(48, 40, 29, 0.08);
+      padding: 18px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .food-card::after {
+      content: attr(data-city);
+      position: absolute;
+      right: 14px;
+      bottom: 6px;
+      color: rgba(83, 98, 68, 0.1);
+      font-family: var(--mono);
+      font-size: 34px;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .food-card h3 {
+      margin: 2px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 2.4vw, 36px);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .food-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .food-card .source {
+      min-height: 48px;
+      border-left: 2px solid rgba(83, 98, 68, 0.32);
+      padding-left: 10px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .food-card .must-order {
+      border-top: 1px solid var(--line-soft);
+      padding-top: 11px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .food-card .must-order b {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent-ink);
+      text-transform: uppercase;
+    }
+
+    .food-card .price-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
     .media-section {
       margin-top: 34px;
       scroll-margin-top: 92px;
@@ -1162,6 +1323,8 @@
       .transport-grid,
       .facts,
       .hotel-grid,
+      .food-card-grid,
+      .bili-source-grid,
       .media-grid,
       .media-grid.four,
       .film-grid,
@@ -1235,8 +1398,27 @@
       }
 
       .hero-meta,
-      .route-notes {
+      .route-notes,
+      .day-brief {
         grid-template-columns: 1fr;
+      }
+
+      .food-card,
+      .bili-source-card {
+        min-height: auto;
+      }
+
+      .route-chip-row,
+      .source-strip,
+      .decision-legend {
+        gap: 7px;
+      }
+
+      .mark,
+      .route-chip {
+        min-height: 25px;
+        padding: 4px 9px;
+        font-size: 10px;
       }
 
       #live-map {
@@ -1542,9 +1724,12 @@
     }
 
     .story-copy .route-next {
-      border-top: 1px solid var(--line-soft);
-      padding-top: 10px;
-      color: var(--muted);
+      justify-self: start;
+      border: 1px solid rgba(88, 79, 61, 0.14);
+      border-radius: 999px;
+      padding: 5px 12px;
+      background: rgba(245, 239, 227, 0.52);
+      color: rgba(81, 72, 60, 0.82);
       font-size: 14px;
     }
 
@@ -1582,6 +1767,71 @@
     .day-brief span {
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .source-strip {
+      margin: 4px 0 16px;
+    }
+
+    .source-strip .route-chip {
+      background: rgba(255, 250, 240, 0.64);
+    }
+
+    .bili-source-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .bili-source-card {
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 250, 240, 0.72);
+      box-shadow: 0 14px 36px rgba(48, 40, 29, 0.07);
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .bili-source-card h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 2.6vw, 38px);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .bili-source-card p,
+    .bili-source-card li {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .bili-source-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .route-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .route-card header .mark {
+      justify-self: start;
+      align-self: start;
+      margin-top: 2px;
+    }
+
+    .route-card .route-footer span {
+      border: 1px solid rgba(88, 79, 61, 0.14);
+      border-radius: 999px;
+      padding: 5px 12px;
+      background: rgba(245, 239, 227, 0.5);
+      color: rgba(81, 72, 60, 0.78);
+      font-size: 11px;
     }
 
     .day-table-wrap {
@@ -1820,6 +2070,56 @@
       </div>
     </section>
 
+    <section id="bili-sources" class="shell">
+      <div class="section-title">
+        <h2>B站攻略怎样进入路线</h2>
+        <p>不是把视频里所有点都堆进来, 而是按“UP主反复强调、画面或字幕能确认、和你们慢旅行路线顺路”三层筛选。能确认的放进主线或备选, 不能确认的只进附录, 不硬猜。</p>
+      </div>
+      <div class="decision-legend">
+        <span class="mark">视频线索已采用</span>
+        <span class="mark option">社媒高频备选</span>
+        <span class="mark skip">证据不足不强塞</span>
+      </div>
+      <div class="bili-source-grid">
+        <article class="bili-source-card">
+          <span class="mark">已进主线</span>
+          <h3>布达佩斯: 市场和复古酒店感</h3>
+          <p>中央市场、Rétes、Fakanal、New York Palace/New York Cafe氛围都来自你前面给的视频线索。最终采用方式是: 市场进D2早上主线, New York Cafe只做拍照或咖啡备选, 不占用正餐和第三天。</p>
+          <div class="route-chip-row"><span class="route-chip">Central Market</span><span class="route-chip">Rétes</span><span class="route-chip">New York Palace</span></div>
+        </article>
+        <article class="bili-source-card">
+          <span class="mark">已进主线</span>
+          <h3>维也纳: 咖啡馆和电影氛围</h3>
+          <p>TARO维也纳vlog里的Cafe Central、Demel被保留为经典备选, 但主线更偏Cafe Sperl和Before Sunrise气质, 因为你们只有一晚, 更需要文艺、顺路、少排队。</p>
+          <div class="route-chip-row"><span class="route-chip">Cafe Sperl</span><span class="route-chip">Cafe Central</span><span class="route-chip">Before Sunrise</span></div>
+        </article>
+        <article class="bili-source-card">
+          <span class="mark option">新增社媒判断</span>
+          <h3>湖区: 用韩国/社媒逻辑校正</h3>
+          <p>湖区不是来自单一B站视频, 而是结合后续你要求的韩国旅行习惯和社媒高频路线: St. Gilgen、Fuschlsee、Wolfgangsee、Strobl更符合人少自然, Hallstatt不放主线。</p>
+          <div class="route-chip-row"><span class="route-chip">St. Gilgen</span><span class="route-chip">Wolfgangsee</span><span class="route-chip">No Hallstatt</span></div>
+        </article>
+        <article class="bili-source-card">
+          <span class="mark option">餐厅备选</span>
+          <h3>布拉格: 本地餐厅和清晨路线</h3>
+          <p>华生Going方向被用于餐厅判断: Lokál、Kantýna放入晚餐候选, Yami Sushi只作为连续中欧菜后的换口味备选。景点上采用清晨查理大桥, 避开白天桥面人潮。</p>
+          <div class="route-chip-row"><span class="route-chip">Lokál</span><span class="route-chip">Kantýna</span><span class="route-chip">Charles Bridge early</span></div>
+        </article>
+        <article class="bili-source-card">
+          <span class="mark skip">未强行采用</span>
+          <h3>酒店只收可确认名称</h3>
+          <p>New York Palace和Hotel Secession an der Oper能从视频线索确认, 所以进住宿附录。布拉格和湖区如果视频里只出现画面但无法确认酒店名, 暂时不写成推荐, 避免幻觉。</p>
+          <div class="route-chip-row"><span class="route-chip">confirmed only</span><span class="route-chip">no guessing</span></div>
+        </article>
+        <article class="bili-source-card">
+          <span class="mark skip">还不算深度</span>
+          <h3>下一步可以更深</h3>
+          <p>如果你把B站视频字幕、弹幕高赞评论或关键画面截图再给我, 我可以继续做到“每个Day标注来自哪支BV、UP主推荐原话、我们采用或放弃的理由”。现在这一版是基于可确认线索的路线级融合。</p>
+          <div class="route-chip-row"><span class="route-chip">need subtitles</span><span class="route-chip">BV mapping</span><span class="route-chip">quote reason</span></div>
+        </article>
+      </div>
+    </section>
+
     <section id="transport">
       <div class="shell">
         <div class="section-title">
@@ -2000,6 +2300,11 @@
         <div class="city-kicker">Act I / Budapest</div>
         <h2>布达佩斯两日恢复</h2>
         <p class="city-intro">抵达日不安排重博物馆, 让第一眼给圣伊什特万、国会大厦和多瑙河。第二天早上去中央市场, 下午过自由桥到盖勒特山脚和温泉。New York Cafe只作为可替换咖啡点, 不再占用第三天。</p>
+        <div class="source-strip">
+          <span class="route-chip">B站采用: 中央市场早场</span>
+          <span class="route-chip">B站采用: New York Palace氛围</span>
+          <span class="route-chip">未采用: New York Cafe正餐排队</span>
+        </div>
         <div class="day-grid">
           <article class="route-card">
             <header>
@@ -2009,6 +2314,7 @@
               </div>
               <div class="date"><b>DAY 1</b><span>10/02 Fri</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">景点主线</span><span class="mark option">咖啡备选</span><span class="mark skip">不进重馆</span></div>
             <ol class="route-line">
               <li>08:00到达后先去酒店寄存, 不急着进收费景点。</li>
               <li>圣伊什特万圣殿 - Liberty Square - 匈牙利国会大厦外观。</li>
@@ -2034,6 +2340,7 @@
               </div>
               <div class="date"><b>DAY 2</b><span>10/03 Sat</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">市场主线</span><span class="mark option">小众街区</span><span class="mark skip">避开午间拥挤</span></div>
             <ol class="route-line">
               <li>08:00到中央市场, 先看蔬果、肉摊和Rétes酥皮卷, 避开午间拥挤。</li>
               <li>市场二层可吃Fakanal, 也可以只把这里当采样点。</li>
@@ -2068,6 +2375,11 @@
         <div class="city-kicker">Act II / Vienna</div>
         <h2>维也纳一夜过渡</h2>
         <p class="city-intro">维也纳从“深玩两天”改成顺路高质量停留。上午从布达佩斯到站, 午后把Upper Belvedere、Karlskirche和内城咖啡馆串成一条, 第二天一早向西去湖区。</p>
+        <div class="source-strip">
+          <span class="route-chip">B站采用: TARO咖啡馆线索</span>
+          <span class="route-chip">电影采用: Before Sunrise</span>
+          <span class="route-chip">交通弱化: Hbf进出</span>
+        </div>
         <div class="day-grid">
           <article class="route-card">
             <header>
@@ -2077,6 +2389,7 @@
               </div>
               <div class="date"><b>DAY 3</b><span>10/04 Sun</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">艺术主线</span><span class="mark option">经典咖啡备选</span><span class="mark skip">不赶第二馆</span></div>
             <ol class="route-line">
               <li>上午从Budapest-Keleti坐直达火车到Wien Hbf。</li>
               <li>若住Hbf或Andaz附近, 午后直接去Upper Belvedere看Klimt。</li>
@@ -2111,6 +2424,11 @@
         <div class="city-kicker">Act III / Salzkammergut</div>
         <h2>湖光深处,不赶热闹</h2>
         <p class="city-intro">湖区不把Hallstatt放主线, 改走当地度假感更强的St. Gilgen、Fuschlsee、Wolfgangsee和Strobl。住宿建议放在St. Gilgen或Fuschl, 交通接Salzburg 150路巴士顺, 也更接近你们想要的人少、自然、湖边慢行。</p>
+        <div class="source-strip">
+          <span class="route-chip">韩国/社媒采用: Wolfgangsee慢线</span>
+          <span class="route-chip">住宿采用: St. Gilgen/Fuschl</span>
+          <span class="route-chip">不采用: Hallstatt主线</span>
+        </div>
         <div class="day-grid">
           <article class="route-card">
             <header>
@@ -2120,6 +2438,7 @@
               </div>
               <div class="date"><b>DAY 4</b><span>10/05 Mon</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">湖边主线</span><span class="mark option">Fuschl备选</span><span class="mark skip">不上山赶景</span></div>
             <ol class="route-line">
               <li>上午Wien Hbf到Salzburg Hbf, 换150路巴士进Fuschl或St. Gilgen。</li>
               <li>下午只走St. Gilgen湖畔、码头、老街和Mozartplatz, 不急着上山。</li>
@@ -2145,6 +2464,7 @@
               </div>
               <div class="date"><b>DAY 5</b><span>10/06 Tue</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">自然主线</span><span class="mark option">雨天Bad Ischl</span><span class="mark skip">不去Hallstatt</span></div>
             <ol class="route-line">
               <li>晴天优先Zwolferhorn缆车或SchafbergBahn二选一, 只选一个高处风光。</li>
               <li>中午回到Wolfgangsee湖边, 坐船或巴士串St. Gilgen - St. Wolfgang - Strobl。</li>
@@ -2179,6 +2499,11 @@
         <div class="city-kicker">Act IV / Prague</div>
         <h2>布拉格清晨黄昏</h2>
         <p class="city-intro">从湖区经Salzburg转到布拉格, 抵达日只走老城和查理大桥, 不进太多馆。第二天清晨上桥, 上午进城堡区, 下午根据天气选约瑟夫城、国家博物馆或Letna夕阳。</p>
+        <div class="source-strip">
+          <span class="route-chip">旅拍采用: 清晨大桥</span>
+          <span class="route-chip">餐厅采用: Lokál/Kantýna方向</span>
+          <span class="route-chip">不采用: 老城全天扎堆</span>
+        </div>
         <div class="day-grid">
           <article class="route-card">
             <header>
@@ -2188,6 +2513,7 @@
               </div>
               <div class="date"><b>DAY 6</b><span>10/07 Wed</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">老城主线</span><span class="mark option">咖啡备选</span><span class="mark skip">不进多馆</span></div>
             <ol class="route-line">
               <li>上午从湖区回Salzburg Hbf, 如时间允许只轻走Mirabell Garden或老城外观。</li>
               <li>下午Salzburg到Praha hl.n., 抵达后先寄存或入住。</li>
@@ -2213,6 +2539,7 @@
               </div>
               <div class="date"><b>DAY 7</b><span>10/08 Thu</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark">城堡主线</span><span class="mark option">雨天博物馆</span><span class="mark skip">避开桥面人潮</span></div>
             <ol class="route-line">
               <li>日出前后到Charles Bridge, 只拍20到30分钟就走。</li>
               <li>Malostranska - Prague Castle - St. Vitus Cathedral - Old Royal Palace - Golden Lane。</li>
@@ -2238,6 +2565,7 @@
               </div>
               <div class="date"><b>DAY 8</b><span>10/09 Fri</span></div>
             </header>
+            <div class="route-chip-row"><span class="mark option">轻量收尾</span><span class="mark skip">不安排收费景点</span><span class="route-chip">机场交通胶囊</span></div>
             <ol class="route-line">
               <li>08:30轻早餐, 不再安排收费景点。</li>
               <li>09:30到10:00退房, 处理退税资料和行李重量。</li>
@@ -2691,196 +3019,99 @@
 
     <section id="food" class="shell">
       <div class="section-title">
-        <h2>B站与社媒餐厅咖啡表</h2>
-        <p>这里单独整理视频里明确出现、评论补充、社媒高频推荐或与路线高度重合的餐厅咖啡馆。客单价是按公开菜单和常见点单方式估算的旅行预算, 正式下单前以店内菜单为准。</p>
+        <h2>B站与社媒餐厅咖啡卡片</h2>
+        <p>这里把视频里明确出现、评论补充、社媒高频推荐和路线高度重合的餐厅咖啡馆拆成卡片。实心菱形是放进主线, 空心圆是顺路备选, 短横是换口味或不强推。</p>
       </div>
-      <div class="food-table-wrap">
-        <table class="food-table">
-          <thead>
-            <tr>
-              <th>店名</th>
-              <th>城市</th>
-              <th>来源线索</th>
-              <th>推荐理由</th>
-              <th>客单价</th>
-              <th>必吃或必点</th>
-              <th>适合放哪天</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Central Market Rétes Stall</td>
-              <td>布达佩斯</td>
-              <td>欧洲_Miaomiao中央市场详解</td>
-              <td>创作者细到摊位号的市场严选, 适合早上边逛边吃。</td>
-              <td>€4到8</td>
-              <td>túró奶酪卷, 酸樱桃罂粟籽卷, 李子卷</td>
-              <td>D2 08:00市场线</td>
-            </tr>
-            <tr>
-              <td>Fakanal Etterem</td>
-              <td>布达佩斯</td>
-              <td>原来是西门大嫂中央市场段</td>
-              <td>中央市场二层顺路, 不需要为餐厅单独绕路。</td>
-              <td>€12到22</td>
-              <td>goulash, chicken paprikash, Hungarian stew</td>
-              <td>D2午餐备选</td>
-            </tr>
-            <tr>
-              <td>New York Cafe</td>
-              <td>布达佩斯</td>
-              <td>多支vlog与New York Palace住宿线</td>
-              <td>复古建筑氛围强, 更适合拍照和甜品咖啡, 不建议执着正餐。</td>
-              <td>€25到45</td>
-              <td>hot chocolate, Dobos cake, espresso drinks</td>
-              <td>D1或D2替换咖啡点</td>
-            </tr>
-            <tr>
-              <td>For Sale Pub</td>
-              <td>布达佩斯</td>
-              <td>原来是西门大嫂vlog提及</td>
-              <td>市场和自由桥附近, 装饰感强, 适合旅行感晚餐。</td>
-              <td>€18到32</td>
-              <td>goulash soup, beef stew, paprika dishes</td>
-              <td>D2晚餐备选</td>
-            </tr>
-            <tr>
-              <td>Cafe Central</td>
-              <td>维也纳</td>
-              <td>TARO维也纳vlog提及</td>
-              <td>维也纳咖啡馆经典样本, 建筑和甜点都适合手札画面。</td>
-              <td>€20到35</td>
-              <td>Wiener melange, apple strudel, Kaiserschmarrn</td>
-              <td>D3晚间或次日早场</td>
-            </tr>
-            <tr>
-              <td>Cafe Demel</td>
-              <td>维也纳</td>
-              <td>TARO维也纳vlog提及</td>
-              <td>比正餐更适合甜点停靠, 与霍夫堡线高度顺路。</td>
-              <td>€18到35</td>
-              <td>Sachertorte, Anna Demel torte, hot chocolate</td>
-              <td>D3内城甜点停靠</td>
-            </tr>
-            <tr>
-              <td>Cafe Sperl</td>
-              <td>维也纳</td>
-              <td>Before Sunrise氛围线和旅拍vlog</td>
-              <td>更文艺, 更像旧维也纳日常, 人流通常比头部咖啡馆温和。</td>
-              <td>€15到28</td>
-              <td>Sperl torte, melange, light lunch</td>
-              <td>D3傍晚</td>
-            </tr>
-            <tr>
-              <td>Kleines Cafe</td>
-              <td>维也纳</td>
-              <td>Before Sunrise取景氛围 + 小红书/旅拍高频</td>
-              <td>Franziskanerplatz小广场很有旧城生活感, 比大咖啡馆更适合city walk停顿。</td>
-              <td>€12到25</td>
-              <td>melange, open sandwich, house wine</td>
-              <td>D3晚间散步线</td>
-            </tr>
-            <tr>
-              <td>Bitzinger Wurstelstand Albertina</td>
-              <td>维也纳</td>
-              <td>维也纳街头小吃高频</td>
-              <td>歌剧院和Albertina旁, 不想排咖啡馆时用来补一顿快餐很顺。</td>
-              <td>€8到15</td>
-              <td>käsekrainer, bratwurst, potato salad</td>
-              <td>D3夜间备选</td>
-            </tr>
-            <tr>
-              <td>Cafe Dallmann</td>
-              <td>St. Gilgen</td>
-              <td>Wolfgangsee湖区咖啡高频</td>
-              <td>St. Gilgen老街和湖边路线中间, 适合把湖区下午压慢。</td>
-              <td>€12到25</td>
-              <td>homemade cakes, apfelstrudel, coffee</td>
-              <td>D4抵达后或D5下午</td>
-            </tr>
-            <tr>
-              <td>Zauner Bad Ischl</td>
-              <td>Bad Ischl</td>
-              <td>湖区雨天/皇室小镇路线高频</td>
-              <td>如果D5天气不适合上山, Bad Ischl + Zauner是很稳的室内甜点替代线。</td>
-              <td>€15到30</td>
-              <td>Zaunerstollen, cakes, hot chocolate</td>
-              <td>D5雨天备选</td>
-            </tr>
-            <tr>
-              <td>Dorf Alm zu St. Wolfgang</td>
-              <td>St. Wolfgang</td>
-              <td>Wolfgangsee路线餐厅备选</td>
-              <td>靠近St. Wolfgang游船与小镇线, 适合D5不赶路时吃一顿湖区正餐。</td>
-              <td>€20到38</td>
-              <td>schnitzel, trout, seasonal Austrian dishes</td>
-              <td>D5午餐或晚餐</td>
-            </tr>
-            <tr>
-              <td>Cafe Louvre</td>
-              <td>布拉格</td>
-              <td>布拉格咖啡馆高频 + 城市文化线</td>
-              <td>老城和国家大街附近, 文学气质强, 适合抵达后的低强度晚餐或甜点。</td>
-              <td>€12到28</td>
-              <td>svíčková, cakes, hot chocolate</td>
-              <td>D6晚间或D7下午</td>
-            </tr>
-            <tr>
-              <td>EMA Espresso Bar</td>
-              <td>布拉格</td>
-              <td>旅拍vlog与咖啡路线高频</td>
-              <td>靠近老城东侧和火车站方向, 适合D6抵达或D7清晨补咖啡。</td>
-              <td>€6到15</td>
-              <td>flat white, batch brew, pastry</td>
-              <td>D6/D7咖啡</td>
-            </tr>
-            <tr>
-              <td>Lokál Dlouhááá</td>
-              <td>布拉格</td>
-              <td>布拉格本地餐厅路线重合</td>
-              <td>老城东侧顺路, 适合第一晚吃捷克菜和tank beer。</td>
-              <td>€15到25</td>
-              <td>tank beer, svíčková, fried cheese</td>
-              <td>D6晚餐</td>
-            </tr>
-            <tr>
-              <td>U Kroka</td>
-              <td>布拉格</td>
-              <td>布拉格本地菜高评价线</td>
-              <td>更适合和Vysehrad或河边散步搭配, 比老城核心餐厅更像认真吃一顿。</td>
-              <td>€18到32</td>
-              <td>duck leg, beef goulash, pork ribs</td>
-              <td>D7或D8早午餐</td>
-            </tr>
-            <tr>
-              <td>Myšák</td>
-              <td>布拉格</td>
-              <td>甜点咖啡社媒高频</td>
-              <td>新城一侧复古甜点店, 适合下雨或逛完博物馆后停一下。</td>
-              <td>€8到18</td>
-              <td>venecek, cakes, coffee</td>
-              <td>D7下午备选</td>
-            </tr>
-            <tr>
-              <td>Kantyna</td>
-              <td>布拉格</td>
-              <td>华生Going本地餐厅方向</td>
-              <td>肉类主题明确, 适合不想吃景区餐的晚餐。</td>
-              <td>€20到40</td>
-              <td>beef tartare, butcher's steak, grilled meat</td>
-              <td>D7晚餐</td>
-            </tr>
-            <tr>
-              <td>Yami Sushi House</td>
-              <td>布拉格</td>
-              <td>华生Going评论区校正</td>
-              <td>作为连续中欧菜后的换口味选择, 不放主线但保留备选。</td>
-              <td>€20到35</td>
-              <td>sushi set, salmon roll, warm miso soup</td>
-              <td>D6或D7备选</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="decision-legend">
+        <span class="mark">route main</span>
+        <span class="mark option">backup</span>
+        <span class="mark skip">not main</span>
+      </div>
+      <div class="food-card-grid">
+        <article class="food-card" data-city="Budapest">
+          <span class="mark">主线采用</span>
+          <h3>Central Market Rétes Stall</h3>
+          <p class="source">B站来源: 欧洲_Miaomiao中央市场详解。创作者细到市场摊位和吃法, 适合D2一早边逛边吃。</p>
+          <div class="must-order"><b>必点</b><span>túró奶酪卷、酸樱桃罂粟籽卷、李子卷。</span></div>
+          <div class="price-line"><span>€4-8</span><span>D2 08:30</span></div>
+        </article>
+        <article class="food-card" data-city="Budapest">
+          <span class="mark option">顺路备选</span>
+          <h3>Fakanal Etterem</h3>
+          <p class="source">B站来源: 原来是西门大嫂中央市场段。优点是中央市场二层顺路, 不为了吃饭额外绕路。</p>
+          <div class="must-order"><b>必点</b><span>goulash、chicken paprikash、Hungarian stew。</span></div>
+          <div class="price-line"><span>€12-22</span><span>D2 lunch</span></div>
+        </article>
+        <article class="food-card" data-city="Budapest">
+          <span class="mark option">拍照备选</span>
+          <h3>New York Cafe</h3>
+          <p class="source">多支vlog和New York Palace住宿线都出现。建筑复古戏剧感强, 但不建议占用主餐名额。</p>
+          <div class="must-order"><b>必点</b><span>hot chocolate、Dobos cake、espresso drinks。</span></div>
+          <div class="price-line"><span>€25-45</span><span>D1/D2</span></div>
+        </article>
+        <article class="food-card" data-city="Vienna">
+          <span class="mark">主线采用</span>
+          <h3>Cafe Sperl</h3>
+          <p class="source">Before Sunrise氛围线 + 旅拍vlog高频。比头部大咖啡馆更像旧维也纳日常, 适合D3傍晚。</p>
+          <div class="must-order"><b>必点</b><span>Sperl torte、melange、light lunch。</span></div>
+          <div class="price-line"><span>€15-28</span><span>D3 17:40</span></div>
+        </article>
+        <article class="food-card" data-city="Vienna">
+          <span class="mark option">经典备选</span>
+          <h3>Cafe Central / Demel</h3>
+          <p class="source">TARO维也纳vlog提及。两家都经典, 但排队和游客密度更高, 放在错峰或替换位。</p>
+          <div class="must-order"><b>必点</b><span>Wiener melange、apple strudel、Sachertorte。</span></div>
+          <div class="price-line"><span>€18-35</span><span>D3 backup</span></div>
+        </article>
+        <article class="food-card" data-city="Vienna">
+          <span class="mark option">夜间小吃</span>
+          <h3>Bitzinger Albertina</h3>
+          <p class="source">维也纳街头小吃高频。歌剧院和Albertina旁, 适合咖啡馆排队失败时快速补能量。</p>
+          <div class="must-order"><b>必点</b><span>käsekrainer、bratwurst、potato salad。</span></div>
+          <div class="price-line"><span>€8-15</span><span>D3 night</span></div>
+        </article>
+        <article class="food-card" data-city="Lake">
+          <span class="mark">主线采用</span>
+          <h3>Cafe Dallmann</h3>
+          <p class="source">Wolfgangsee湖区咖啡高频。位于St. Gilgen老街与湖边之间, 最适合抵达日把速度降下来。</p>
+          <div class="must-order"><b>必点</b><span>homemade cakes、apfelstrudel、coffee。</span></div>
+          <div class="price-line"><span>€12-25</span><span>D4/D5</span></div>
+        </article>
+        <article class="food-card" data-city="Lake">
+          <span class="mark option">天气备选</span>
+          <h3>Zauner Bad Ischl</h3>
+          <p class="source">湖区雨天与皇室小镇路线高频。D5如果山上能见度差, 这条比硬上山更舒服。</p>
+          <div class="must-order"><b>必点</b><span>Zaunerstollen、cakes、hot chocolate。</span></div>
+          <div class="price-line"><span>€15-30</span><span>D5 rainy</span></div>
+        </article>
+        <article class="food-card" data-city="Lake">
+          <span class="mark option">湖边正餐</span>
+          <h3>Dorf Alm zu St. Wolfgang</h3>
+          <p class="source">Wolfgangsee路线餐厅备选。适合D5湖船或St. Wolfgang老街线, 不赶路时认真吃一顿。</p>
+          <div class="must-order"><b>必点</b><span>schnitzel、trout、seasonal Austrian dishes。</span></div>
+          <div class="price-line"><span>€20-38</span><span>D5 lunch</span></div>
+        </article>
+        <article class="food-card" data-city="Prague">
+          <span class="mark">主线采用</span>
+          <h3>Lokál Dlouhááá</h3>
+          <p class="source">布拉格本地餐厅路线重合。老城东侧顺路, 适合D6抵达后吃捷克菜和tank beer。</p>
+          <div class="must-order"><b>必点</b><span>tank beer、svíčková、fried cheese。</span></div>
+          <div class="price-line"><span>€15-25</span><span>D6 dinner</span></div>
+        </article>
+        <article class="food-card" data-city="Prague">
+          <span class="mark option">咖啡备选</span>
+          <h3>Cafe Louvre / EMA</h3>
+          <p class="source">布拉格咖啡馆与旅拍vlog高频。Cafe Louvre偏文学气质, EMA更适合车站和老城东侧动线。</p>
+          <div class="must-order"><b>必点</b><span>hot chocolate、flat white、pastry。</span></div>
+          <div class="price-line"><span>€6-28</span><span>D6/D7</span></div>
+        </article>
+        <article class="food-card" data-city="Prague">
+          <span class="mark skip">不放主线</span>
+          <h3>Yami Sushi House</h3>
+          <p class="source">华生Going评论区校正。作为连续中欧菜后的换口味选择保留, 但不占主线旅行氛围。</p>
+          <div class="must-order"><b>必点</b><span>sushi set、salmon roll、warm miso soup。</span></div>
+          <div class="price-line"><span>€20-35</span><span>backup</span></div>
+        </article>
       </div>
     </section>
 
