@@ -4,22 +4,25 @@ Central Europe 2026 travel journal and social card assets.
 
 ## Website
 
-- Primary domain: https://travel-tefuda.com
-- Cloudflare Pages fallback: https://travel-tefuda.pages.dev
+- GitHub Pages: https://longlongnero.github.io/travel-tefuda/
+- Cloudflare Pages: https://travel-tefuda.pages.dev
+- OpenAI Sites: https://central-europe-travel-journal-2026.j6kpwz64y9.chatgpt.site
 - GitHub repository: https://github.com/longlongnero/travel-tefuda
 
 ## Structure
 
-- `outputs/central-europe-2026/html-guide/` - deployed static website
+- `outputs/central-europe-2026/prototype-v2/` - current mobile itinerary source, tests and deployable `dist/`
+- `outputs/central-europe-2026/html-guide/` - legacy long-form guide
 - `outputs/central-europe-2026/html-guide/deploy-guide.html` - bilingual public deployment walkthrough with mock configuration screenshots
 - `outputs/central-europe-2026/social-cards/` - social card source and exported images
 
 ## Update Flow
 
-1. Edit the local HTML guide or social card files.
-2. Commit the change.
-3. Push to `main`.
-4. Cloudflare Pages deploys `outputs/central-europe-2026/html-guide/`.
+1. Edit `outputs/central-europe-2026/prototype-v2/index.html`, `style.css` or `app.js`.
+2. Run `node outputs/central-europe-2026/prototype-v2/scripts/sync-dist.cjs`.
+3. Run the tests documented in `outputs/central-europe-2026/prototype-v2/README.md`.
+4. Commit and push to `main`.
+5. GitHub Actions verifies the deployable files and publishes `prototype-v2/dist` to GitHub Pages.
 
 ## Cloudflare Pages Custom Domain DNS
 

@@ -25,6 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify deployable site
+        run: |
+          cd outputs/central-europe-2026/prototype-v2
+          node --check app.js
+          node scripts/sync-dist.cjs
+          node tests/source-dist.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -33,7 +40,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: outputs/central-europe-2026/html-guide
+          path: outputs/central-europe-2026/prototype-v2/dist
 
       - name: Deploy to GitHub Pages
         id: deployment

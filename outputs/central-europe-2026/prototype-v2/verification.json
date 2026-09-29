@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-09-20T09:29:52.203Z",
+  "browser": "Chrome headless",
+  "reports": [
+    {
+      "variant": "a",
+      "widths": [
+        320,
+        390,
+        430
+      ],
+      "flows": [
+        "timezone",
+        "event identity",
+        "linked document and download",
+        "day selection",
+        "independent packing lists",
+        "new packing item",
+        "document import and preview",
+        "album open and next and import",
+        "expense add and split and edit",
+        "currency isolation"
+      ],
+      "result": "passed"
+    },
+    {
+      "variant": "b",
+      "widths": [
+        320,
+        390,
+        430
+      ],
+      "flows": [
+        "timezone",
+        "event identity",
+        "linked document and download",
+        "day selection",
+        "independent packing lists",
+        "new packing item",
+        "document import and preview",
+        "album open and next and import",
+        "expense add and split and edit",
+        "currency isolation"
+      ],
+      "result": "passed"
+    }
+  ]
+}
