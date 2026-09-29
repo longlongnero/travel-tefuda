@@ -4,3 +4,4 @@ node_modules/
 .env
 .env.*
 outputs/central-europe-2026/prototype-v2/.openai/
+.wrangler/
