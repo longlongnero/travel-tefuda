@@ -5,7 +5,8 @@ Central Europe 2026 travel journal and social card assets.
 ## Website
 
 - GitHub Pages: https://longlongnero.github.io/travel-tefuda/
-- Cloudflare Pages: https://travel-tefuda.pages.dev
+- Mobile app: https://travel-tefuda.pages.dev
+- Long-form guide: https://travel-tefuda-guide.pages.dev
 - OpenAI Sites: https://central-europe-travel-journal-2026.j6kpwz64y9.chatgpt.site
 - GitHub repository: https://github.com/longlongnero/travel-tefuda
 
