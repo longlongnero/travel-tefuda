@@ -66,10 +66,17 @@ const { chromium } = loadPlaywright();
     await page.locator('#event-form [name="type"]').selectOption('walk');
     await page.locator('#event-form [name="title"]').fill('持久化测试安排');
     await page.locator('#event-form [name="place"]').fill('Budapest');
+    await page.locator('#event-form [name="mapUrl"]').fill('https://example.com/not-a-map');
     await page.locator('#event-form [name="note"]').fill('刷新后应继续存在。');
+    await page.getByRole('button', { name:'保存安排', exact:true }).click();
+    assert.match(await page.locator('#form-error').innerText(), /有效的 Google Maps HTTPS 分享链接/);
+    await page.locator('#event-form [name="mapUrl"]').fill('https://www.google.com/maps/place/Budapest/');
     await page.getByRole('button', { name:'保存安排', exact:true }).click();
     await page.reload();
     assert.match(await page.locator('#main').innerText(), /持久化测试安排/);
+    await page.locator('.event-card').filter({ hasText:'持久化测试安排' }).click();
+    assert.equal(await page.getByRole('link', { name:/地图导航/ }).getAttribute('href'), 'https://www.google.com/maps/place/Budapest/');
+    await page.getByRole('button', { name:'关闭详情', exact:true }).click();
     await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
     await page.getByRole('button', { name:/编辑 持久化测试安排/ }).click();
     page.once('dialog', dialog => dialog.accept());
@@ -118,6 +125,6 @@ const { chromium } = loadPlaywright();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
     }
-    console.log('PASS: Oct 2 has 27 items and visible editor; manual order and CRUD persist across reload; all eight day editors work; 19:00 concert is default');
+    console.log('PASS: Oct 2 has 27 items and visible editor; order, Google Maps links, and CRUD persist across reload; all eight day editors work; 19:00 concert is default');
   } finally { await browser.close(); }
 })().catch(error=>{ console.error(error); process.exitCode=1; });
