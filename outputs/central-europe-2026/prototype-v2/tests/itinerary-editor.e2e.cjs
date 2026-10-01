@@ -28,6 +28,39 @@ const { chromium } = loadPlaywright();
     const page = await browser.newPage({ viewport:{ width:390, height:844 } });
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
     await page.locator('#nav a[href="#plan"]').click();
+    await page.waitForFunction(() => location.hash === '#plan' && document.querySelector('.date-strip'));
+
+    // Day 1 ships with the confirmed detailed Budapest route and a visible edit entry.
+    const dayOneText = await page.locator('#main').innerText();
+    for (const expected of [
+      '希尔顿寄存行李、整理休息',
+      'Csészényi Café',
+      'Retek午餐、休息',
+      'Citygraph Art Gallery（机动项）',
+      '渔人堡、马加什教堂周边夜景',
+    ]) assert.match(dayOneText, new RegExp(expected));
+    assert.equal(await page.locator('.timeline .event-row').count(), 27);
+    const editBox = await page.getByRole('button', { name:'编辑当日行程', exact:true }).boundingBox();
+    const firstEventBox = await page.locator('.timeline .event-row').first().boundingBox();
+    assert.ok(editBox && firstEventBox && editBox.y < firstEventBox.y && editBox.y < 844, 'edit entry should be visible above the timeline');
+
+    // Itinerary mutations survive a reload in the same browser.
+    await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
+    await page.getByRole('button', { name:'新增安排', exact:true }).click();
+    await page.locator('#event-form [name="time"]').fill('22:15');
+    await page.locator('#event-form [name="type"]').selectOption('walk');
+    await page.locator('#event-form [name="title"]').fill('持久化测试安排');
+    await page.locator('#event-form [name="place"]').fill('Budapest');
+    await page.locator('#event-form [name="note"]').fill('刷新后应继续存在。');
+    await page.getByRole('button', { name:'保存安排', exact:true }).click();
+    await page.reload();
+    assert.match(await page.locator('#main').innerText(), /持久化测试安排/);
+    await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
+    await page.getByRole('button', { name:/编辑 持久化测试安排/ }).click();
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByRole('button', { name:'删除安排', exact:true }).click();
+    await page.reload();
+    assert.doesNotMatch(await page.locator('#main').innerText(), /持久化测试安排/);
 
     // The confirmed evening programme is the default branch, pending ticket-face verification.
     await page.getByRole('button', { name:'10月3日', exact:true }).click();
@@ -70,6 +103,6 @@ const { chromium } = loadPlaywright();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
     }
-    console.log('PASS: all eight days open the correct editor; representative add/edit/delete works; 19:00 concert is default');
+    console.log('PASS: Oct 2 has 27 items and visible editor; itinerary CRUD persists across reload; all eight day editors work; 19:00 concert is default');
   } finally { await browser.close(); }
 })().catch(error=>{ console.error(error); process.exitCode=1; });
