@@ -44,6 +44,21 @@ const { chromium } = loadPlaywright();
     const firstEventBox = await page.locator('.timeline .event-row').first().boundingBox();
     assert.ok(editBox && firstEventBox && editBox.y < firstEventBox.y && editBox.y < 844, 'edit entry should be visible above the timeline');
 
+    // Manual ordering is touch-friendly, updates the timeline, and persists across reloads.
+    await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
+    assert.equal(await page.getByRole('button', { name:'上移 希尔顿寄存行李、整理休息', exact:true }).isDisabled(), true);
+    await page.getByRole('button', { name:'下移 希尔顿寄存行李、整理休息', exact:true }).click();
+    assert.match(await page.locator('.itinerary-edit-row').first().innerText(), /前往 Csészényi Café/);
+    await page.getByRole('button', { name:'关闭详情', exact:true }).click();
+    assert.match(await page.locator('.timeline .event-row').first().innerText(), /前往 Csészényi Café/);
+    await page.reload();
+    assert.match(await page.locator('.timeline .event-row').first().innerText(), /前往 Csészényi Café/);
+
+    // Restore the default order so the remaining CRUD checks start from the shipped itinerary.
+    await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
+    await page.getByRole('button', { name:'上移 希尔顿寄存行李、整理休息', exact:true }).click();
+    await page.getByRole('button', { name:'关闭详情', exact:true }).click();
+
     // Itinerary mutations survive a reload in the same browser.
     await page.getByRole('button', { name:'编辑当日行程', exact:true }).click();
     await page.getByRole('button', { name:'新增安排', exact:true }).click();
@@ -103,6 +118,6 @@ const { chromium } = loadPlaywright();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
       await page.getByRole('button', { name:'关闭详情', exact:true }).click();
     }
-    console.log('PASS: Oct 2 has 27 items and visible editor; itinerary CRUD persists across reload; all eight day editors work; 19:00 concert is default');
+    console.log('PASS: Oct 2 has 27 items and visible editor; manual order and CRUD persist across reload; all eight day editors work; 19:00 concert is default');
   } finally { await browser.close(); }
 })().catch(error=>{ console.error(error); process.exitCode=1; });
